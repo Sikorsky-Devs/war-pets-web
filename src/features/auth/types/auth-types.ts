@@ -1,13 +1,15 @@
 import { z } from "zod";
 
 export const signUpSchema = z.object({
-  nickname: z.string().min(3, "Name must be at least 3 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 6 characters"),
+  email: z.string().email("Невірний формат електронної пошти"),
+  password: z.string().min(8, "Пароль повинен містити не менше 8 символів"),
+  accountType: z.enum(["SHELTER", "VOLUNTEER"], {
+    errorMap: () => ({ message: "Неправильний тип аккаунту" }),
+  }),
 });
 
 export const signInSchema = z.object({
-  emailOrNickname: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 6 characters"),
 });
 
@@ -18,12 +20,6 @@ export interface EmailResendRequest {
   email: string;
 }
 
-export type UserRole = "PLAYER" | "ADMIN";
-
-export interface User {
-  id: string;
-  email: string;
-  nickname: string;
-  role: UserRole;
-  avatarLink: string | null;
+export interface TokenResponse {
+  token: string;
 }

@@ -13,6 +13,7 @@ import {
   type SignInFormData,
   signInSchema,
 } from "@/features/auth/types/auth-types";
+import { setAuthToken } from "@/utils/auth-utils";
 import { cn } from "@/utils/styles-utils";
 
 interface SignInFormProps {
@@ -24,15 +25,16 @@ const SignInForm = ({ className }: SignInFormProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
   });
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      await signIn(data);
-      toast.success("Logged in successfully");
+      const { token } = await signIn(data);
+      setAuthToken(token);
+      toast.success("Ви успішно увійшли в акаунт");
       replace(Routes.Home);
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
@@ -56,9 +58,9 @@ const SignInForm = ({ className }: SignInFormProps) => {
           id="email"
           type="email"
           label="Email"
-          error={errors.emailOrNickname?.message}
+          error={errors.email?.message}
           placeholder="m@example.com"
-          {...register("emailOrNickname")}
+          {...register("email")}
         />
         <Input
           id="password"
@@ -67,7 +69,7 @@ const SignInForm = ({ className }: SignInFormProps) => {
           type="password"
           {...register("password")}
         />
-        <Button type="submit" className="w-full">
+        <Button isLoading={isSubmitting} type="submit" className="w-full">
           Увійти
         </Button>
       </div>

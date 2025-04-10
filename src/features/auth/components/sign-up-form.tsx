@@ -4,9 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Routes } from "@/constants/navigation";
 import { signUp } from "@/features/auth/api/auth-api";
 import {
@@ -24,16 +33,32 @@ const SignUpForm = ({ className }: SignUpFormProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+    formState: { errors, isSubmitting },
+    setValue,
+  } = useForm<SignUpFormData & { accountType: "SHELTER" | "VOLUNTEER" }>({
+    resolver: zodResolver(
+      signUpSchema.extend({
+        accountType: z.enum(["SHELTER", "VOLUNTEER"]),
+      }),
+    ),
+    defaultValues: {
+      accountType: "VOLUNTEER",
+    },
   });
 
-  const onSubmit = async (data: SignUpFormData) => {
+  const onSubmit = async (
+    data: SignUpFormData & { accountType: "SHELTER" | "VOLUNTEER" },
+  ) => {
     try {
-      await signUp(data);
-      toast.success("Account created successfully");
-      replace(Routes.SignIn);
+      await signUp({
+        ...data,
+        accountType: data.accountType,
+      });
+      toast.success("Акаунт успішно створено", {
+        description:
+          "Перевірте свою електронну пошту, щоб підтвердити реєстрацію.",
+      });
+      replace(Routes.AuthSuccess);
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
       console.error(e);
@@ -48,17 +73,11 @@ const SignUpForm = ({ className }: SignUpFormProps) => {
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Створи новий аккаунт</h1>
         <p className="text-balance text-sm text-muted-foreground">
-          Введіть ім’я, електронну пошту та пароль для створення нового аккаунту
+          Введіть ім&#39;я, електронну пошту та пароль для створення нового
+          аккаунту
         </p>
       </div>
       <div className="grid gap-4">
-        <Input
-          id="name"
-          label="Ім'я"
-          error={errors.nickname?.message}
-          placeholder="John Doe"
-          {...register("nickname")}
-        />
         <Input
           id="email"
           type="email"
@@ -74,7 +93,29 @@ const SignUpForm = ({ className }: SignUpFormProps) => {
           type="password"
           {...register("password")}
         />
-        <Button type="submit" className="w-full">
+        <div className="space-y-2">
+          <Label htmlFor="accountType">Тип аккаунту</Label>
+          <Select
+            defaultValue="VOLUNTEER"
+            onValueChange={(value: "SHELTER" | "VOLUNTEER") =>
+              setValue("accountType", value)
+            }
+          >
+            <SelectTrigger id="accountType">
+              <SelectValue placeholder="Оберіть тип аккаунту" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="SHELTER">Притулок</SelectItem>
+              <SelectItem value="VOLUNTEER">Волонтер</SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.accountType && (
+            <p className="text-sm text-destructive">
+              {errors.accountType.message}
+            </p>
+          )}
+        </div>
+        <Button isLoading={isSubmitting} type="submit" className="w-full">
           Зареєструватися
         </Button>
       </div>

@@ -2,16 +2,13 @@
 
 import { type PropsWithChildren, useEffect } from "react";
 
+import { getMe } from "@/features/auth/api/auth-api";
 import { hydrateAuthStore } from "@/store/use-auth-store";
-
-const userMock = null;
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const fetchUser = async () => {
     try {
-      const user = await new Promise<typeof userMock>((resolve) =>
-        setTimeout(() => resolve(userMock), 1000),
-      );
+      const user = await getMe();
       hydrateAuthStore(user);
     } catch (e) {
       hydrateAuthStore(null);

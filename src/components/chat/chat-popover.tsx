@@ -2,6 +2,7 @@
 
 import { MessageCircle } from "lucide-react";
 
+import ChatInterface from "@/components/chat/chat-interface";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -9,9 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { ChatInterface } from "./chat-interface";
-
-export const ChatPopover = () => (
+const ChatPopover = () => (
   <Popover>
     <PopoverTrigger asChild>
       <Button
@@ -26,3 +25,5 @@ export const ChatPopover = () => (
     </PopoverContent>
   </Popover>
 );
+
+export default ChatPopover;

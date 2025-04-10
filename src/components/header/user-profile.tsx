@@ -8,9 +8,13 @@ import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
 import useAuthStore from "@/store/use-auth-store";
 import { cn } from "@/utils/styles-utils";
+import { getAccountType, getUserName } from "@/utils/user-utils";
 
 const UserProfile = () => {
   const { user, isLoading } = useAuthStore();
+
+  const accountType = getAccountType(user?.accountType);
+  const userName = getUserName(user?.name, user?.firstName, user?.lastName);
 
   if (isLoading) {
     return (
@@ -34,9 +38,11 @@ const UserProfile = () => {
       )}
     >
       <div className="flex flex-col">
-        <span className="text-right text-sm font-medium">{user?.nickname}</span>
-        <span className="text-muted-foreground text-right text-xs">
-          {user?.email}
+        <span className="text-right text-sm font-medium">
+          {userName ?? user?.email}
+        </span>
+        <span className="text-right text-xs text-muted-foreground">
+          {accountType}
         </span>
       </div>
       <UserAvatar />

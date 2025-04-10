@@ -3,10 +3,7 @@ export enum Routes {
   Profile = "/profile",
   SignUp = "/auth/sign-up",
   SignIn = "/auth/sign-in",
-  Blog = "/blog",
-  About = "/about",
-  Contact = "/contact",
-  Github = "https://github.com/",
+  AuthSuccess = "/auth/success",
 }
 
 export const navigation = [

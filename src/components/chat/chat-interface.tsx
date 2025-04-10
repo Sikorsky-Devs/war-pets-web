@@ -1,12 +1,10 @@
 "use client";
 
 import { format } from "date-fns";
-import { Send, UserRound } from "lucide-react";
+import { Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import UserAvatar from "@/components/user-avatar";
 import { socket } from "@/lib/socket";
@@ -20,14 +18,13 @@ interface Message {
   avatarLink: string;
 }
 
-export const ChatInterface = () => {
+const ChatInterface = () => {
   const user = useAuthStore((state) => state.user);
   const questId = "default-quest-id";
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new messages are added
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -35,22 +32,17 @@ export const ChatInterface = () => {
     }
   }, [messages]);
 
-  // Initialize socket connection and join the room
   useEffect(() => {
-    // Join the room when component mounts
     socket.emit("join", { questId });
 
-    // Listen for join event with chat history
     socket.on("join", (history: Message[]) => {
       setMessages(history);
     });
 
-    // Listen for new messages
     socket.on("message", (message: Message) => {
       setMessages((prev) => [...prev, message]);
     });
 
-    // Clean up listeners when component unmounts
     return () => {
       socket.off("join");
       socket.off("message");
@@ -64,7 +56,7 @@ export const ChatInterface = () => {
     if (!newMessage.trim()) return;
 
     const messageData: Message = {
-      nickname: user?.nickname ?? "You",
+      nickname: user?.email ?? "You",
       createdAt: new Date().toISOString(),
       content: newMessage,
       questId: questId,
@@ -75,11 +67,10 @@ export const ChatInterface = () => {
     setNewMessage("");
   };
 
-  const isOwnMessage = (message: Message) =>
-    message.nickname === user?.nickname;
+  const isOwnMessage = (message: Message) => message.nickname === user?.email;
 
   return (
-    <Card className="flex w-[400px] flex-col shadow-lg">
+    <div className="flex w-[400px] flex-col shadow-lg">
       <div className="flex items-center justify-between border-b p-4">
         <div className="flex items-center gap-3">
           <UserAvatar
@@ -88,7 +79,7 @@ export const ChatInterface = () => {
             className="h-12 w-12"
           />
           <div>
-            <div className="font-semibold">{user?.nickname}</div>
+            <div className="font-semibold">{user?.email}</div>
             <div className="text-sm text-muted-foreground">{user?.email}</div>
           </div>
         </div>
@@ -158,6 +149,8 @@ export const ChatInterface = () => {
           </Button>
         </form>
       </div>
-    </Card>
+    </div>
   );
 };
+
+export default ChatInterface;

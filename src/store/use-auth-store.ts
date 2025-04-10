@@ -1,12 +1,6 @@
 import { create } from "zustand/react";
 
-const user = {
-  nickname: "Jane Doe",
-  email: "testmail@gmail.com",
-  avatarLink: "https://avatars.dicebear.com/api/avataaars/jane-doe.svg",
-};
-
-export type User = typeof user;
+import { type User } from "@/types/user";
 
 interface AuthStore {
   user: User | null;

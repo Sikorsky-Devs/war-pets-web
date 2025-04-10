@@ -24,7 +24,7 @@ const ApproveEmailCard = () => {
     try {
       await emailApprove(token);
       setStatus("success");
-      toast.success("Email approved successfully!");
+      toast.success("Пошту підтверджено успішно");
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
@@ -37,7 +37,7 @@ const ApproveEmailCard = () => {
     if (!email) return;
     try {
       await emailResend({ email: email });
-      toast.success("Email sent successfully!");
+      toast.success("Лист підтвердження надіслано повторно");
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
@@ -52,7 +52,9 @@ const ApproveEmailCard = () => {
   return (
     <Card className="w-full max-w-lg">
       <CardHeader>
-        <CardTitle className="text-center text-2xl">Email Approval</CardTitle>
+        <CardTitle className="text-center text-2xl">
+          Підтвердження пошти
+        </CardTitle>
       </CardHeader>
       <CardContent className="text-center">
         {status === "loading" && (
@@ -63,7 +65,7 @@ const ApproveEmailCard = () => {
             <div className="flex items-center justify-center space-x-2 text-green-600">
               <CheckCircle2 className="h-6 w-6" />
               <span className="text-md font-semibold">
-                Email approved successfully!
+                Пошту підтверджено успішно!
               </span>
             </div>
             <Link
@@ -73,7 +75,7 @@ const ApproveEmailCard = () => {
               )}
               href={Routes.SignIn}
             >
-              Go to login
+              Повернутися до входу
             </Link>
           </>
         )}
@@ -82,7 +84,7 @@ const ApproveEmailCard = () => {
             <div className="flex items-center justify-center space-x-2 text-red-600">
               <XCircle className="h-6 w-6" />
               <span className="text-md font-semibold">
-                Failed to approve email.
+                Не вдалося підтвердити пошту.
               </span>
             </div>
             <Button
@@ -91,7 +93,7 @@ const ApproveEmailCard = () => {
               size="lg"
               className="mt-4"
             >
-              Try again
+              Спробувати ще раз
             </Button>
           </>
         )}

@@ -3,9 +3,11 @@ import {
   type EmailResendRequest,
   type SignInFormData,
   type SignUpFormData,
-  type User,
+  type TokenResponse,
 } from "@/features/auth/types/auth-types";
 import { type ErrorResponse } from "@/types/api";
+import { type User } from "@/types/user";
+import { generateAuthHeaders } from "@/utils/auth-utils";
 
 export const signIn = async (data: SignInFormData) => {
   try {
@@ -22,7 +24,7 @@ export const signIn = async (data: SignInFormData) => {
       throw new Error(error.message);
     }
 
-    return response;
+    return (await response.json()) as TokenResponse;
   } catch (e) {
     throw e;
   }
@@ -63,12 +65,12 @@ export const emailResend = async (data: EmailResendRequest) => {
       const error: ErrorResponse = await response.json();
       throw new Error(error.message);
     }
-
     return response;
   } catch (e) {
     throw e;
   }
 };
+
 export const emailApprove = async (token: string) => {
   try {
     const response = await fetch(`${API_URL}/auth/email-approve/${token}`, {
@@ -92,6 +94,7 @@ export const getMe = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        ...generateAuthHeaders(),
       },
     });
 
