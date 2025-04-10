@@ -13,7 +13,7 @@ import {
   type SignInFormData,
   signInSchema,
 } from "@/features/auth/types/auth-types";
-import { setAuthToken } from "@/utils/auth-utils";
+import { getUser, setAuthToken } from "@/utils/auth-utils";
 import { cn } from "@/utils/styles-utils";
 
 interface SignInFormProps {
@@ -34,6 +34,7 @@ const SignInForm = ({ className }: SignInFormProps) => {
     try {
       const { token } = await signIn(data);
       setAuthToken(token);
+      await getUser();
       toast.success("Ви успішно увійшли в акаунт");
       replace(Routes.Home);
     } catch (e) {

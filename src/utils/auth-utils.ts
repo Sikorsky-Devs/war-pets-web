@@ -1,3 +1,7 @@
+import { getMe } from "@/features/auth/api/auth-api";
+import { guestUser, hydrateAuthStore } from "@/store/use-auth-store";
+import { type AccountType } from "@/types/user";
+
 const isBrowser = typeof window !== "undefined";
 const tokenKey = "token";
 
@@ -25,4 +29,17 @@ export const generateAuthHeaders = () => {
   return {
     Authorization: `Bearer ${token}`,
   };
+};
+
+export const getUser = async () => {
+  const user = await getMe();
+  hydrateAuthStore(user);
+};
+
+export const logoutUser = () => {
+  hydrateAuthStore(guestUser);
+};
+
+export const isGuest = (accountType: AccountType) => {
+  return accountType === "GUEST";
 };

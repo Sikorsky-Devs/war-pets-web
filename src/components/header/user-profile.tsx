@@ -7,11 +7,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
 import useAuthStore from "@/store/use-auth-store";
+import { isGuest } from "@/utils/auth-utils";
 import { cn } from "@/utils/styles-utils";
 import { getAccountType, getUserName } from "@/utils/user-utils";
 
 const UserProfile = () => {
   const { user, isLoading } = useAuthStore();
+
+  console.log("user", user);
 
   const accountType = getAccountType(user?.accountType);
   const userName = getUserName(user?.name, user?.firstName, user?.lastName);
@@ -28,7 +31,7 @@ const UserProfile = () => {
     );
   }
 
-  if (!user && !isLoading) return <AuthButtons />;
+  if (isGuest(user.accountType) && !isLoading) return <AuthButtons />;
 
   return (
     <Link

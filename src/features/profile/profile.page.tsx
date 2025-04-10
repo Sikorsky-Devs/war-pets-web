@@ -11,11 +11,6 @@ import { profileData } from "../../../data/profile-data";
 
 const ProfilePage = () => {
   const {
-    name,
-    role,
-    avatar,
-    badge,
-    stats,
     contactInfo,
     profileCompletion,
     skills,
@@ -25,16 +20,9 @@ const ProfilePage = () => {
   } = profileData;
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+    <div className="mx-auto grid max-w-screen-xl grid-cols-1 gap-6 px-4 py-4 sm:px-6 md:grid-cols-3 lg:px-8">
       <div className="space-y-6 md:col-span-1">
-        <ProfileCard
-          name={name}
-          role={role}
-          avatar={avatar}
-          badge={badge}
-          stats={stats}
-          contactInfo={contactInfo}
-        />
+        <ProfileCard />
 
         <ProfileCompletionCard
           title={profileCompletion.title}

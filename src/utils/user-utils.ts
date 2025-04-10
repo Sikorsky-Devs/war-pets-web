@@ -15,3 +15,16 @@ export const getUserName = (
   if (firstName && lastName) return `${firstName} ${lastName}`;
   if (firstName && !lastName) return firstName;
 };
+
+export const getFullName = (
+  firstName?: string | null,
+  lastName?: string | null,
+  middleName?: string | null,
+) => {
+  if (firstName && lastName && middleName) {
+    return `${middleName} ${firstName} ${lastName}`;
+  }
+  if (firstName && lastName) return `${firstName} ${lastName}`;
+  if (firstName && !lastName) return firstName;
+  return "Не вказано";
+};

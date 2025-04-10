@@ -1,30 +1,21 @@
-import { Mail, Phone, MapPin, Globe } from "lucide-react"
+import { Globe, Mail, MapPin, Phone } from "lucide-react";
 
 export const profileData = {
-  name: "Anshan Haso",
-  role: "Project Manager",
-  avatar: "/placeholder.svg?height=128&width=128",
-  badge: "Pro",
-  stats: [
-    { value: 184, label: "Posts" },
-    { value: 32, label: "Projects" },
-    { value: "4.5K", label: "Members" },
-  ],
   contactInfo: [
     {
-      icon: <Mail className="w-5 h-5 text-muted-foreground" />,
+      icon: Mail,
       content: "anshan@gmail.com",
     },
     {
-      icon: <Phone className="w-5 h-5 text-muted-foreground" />,
+      icon: Phone,
       content: "(+1-876) 8654 239 581",
     },
     {
-      icon: <MapPin className="w-5 h-5 text-muted-foreground" />,
+      icon: MapPin,
       content: "New York",
     },
     {
-      icon: <Globe className="w-5 h-5 text-muted-foreground" />,
+      icon: Globe,
       content: "https://shadcnuikit.com",
       isLink: true,
       href: "https://shadcnuikit.com",
@@ -36,7 +27,16 @@ export const profileData = {
   },
   skills: {
     title: "Skills",
-    list: ["Photoshop", "Figma", "HTML", "React", "Tailwind CSS", "CSS", "Laravel", "Node.js"],
+    list: [
+      "Photoshop",
+      "Figma",
+      "HTML",
+      "React",
+      "Tailwind CSS",
+      "CSS",
+      "Laravel",
+      "Node.js",
+    ],
   },
   activities: {
     title: "Latest Activity",
@@ -59,7 +59,8 @@ export const profileData = {
       {
         title: "Shadcn UI Kit Library v1.2.2",
         date: "Released on December 2nd, 2021",
-        description: "Get started with dozens of web components and interactive elements built on top of Tailwind CSS.",
+        description:
+          "Get started with dozens of web components and interactive elements built on top of Tailwind CSS.",
       },
     ],
   },
@@ -117,5 +118,4 @@ export const profileData = {
       },
     ],
   },
-}
-
+};
