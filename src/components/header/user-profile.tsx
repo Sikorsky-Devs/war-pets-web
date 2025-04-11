@@ -14,8 +14,6 @@ import { getAccountType, getUserName } from "@/utils/user-utils";
 const UserProfile = () => {
   const { user, isLoading } = useAuthStore();
 
-  console.log("user", user);
-
   const accountType = getAccountType(user?.accountType);
   const userName = getUserName(user?.name, user?.firstName, user?.lastName);
 

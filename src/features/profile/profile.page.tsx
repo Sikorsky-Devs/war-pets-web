@@ -10,14 +10,8 @@ import SkillsCard from "@/features/profile/components/skills-card";
 import { profileData } from "../../../data/profile-data";
 
 const ProfilePage = () => {
-  const {
-    contactInfo,
-    profileCompletion,
-    skills,
-    activities,
-    aboutMe,
-    connections,
-  } = profileData;
+  const { profileCompletion, skills, activities, aboutMe, connections } =
+    profileData;
 
   return (
     <div className="mx-auto grid max-w-screen-xl grid-cols-1 gap-6 px-4 py-4 sm:px-6 md:grid-cols-3 lg:px-8">

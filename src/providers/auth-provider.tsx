@@ -1,14 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { type PropsWithChildren, useEffect } from "react";
 
-import { Routes } from "@/constants/navigation";
-import { getMe } from "@/features/auth/api/auth-api";
-import useAuthStore, {
-  guestUser,
-  hydrateAuthStore,
-} from "@/store/use-auth-store";
+import { guestUser, hydrateAuthStore } from "@/store/use-auth-store";
 import { getAuthToken, getUser } from "@/utils/auth-utils";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
