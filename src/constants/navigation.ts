@@ -1,6 +1,7 @@
 export enum Routes {
   Home = "/",
   Profile = "/profile",
+  ShelterProfile = "/shelter-profile",
   SignUp = "/auth/sign-up",
   SignIn = "/auth/sign-in",
   AuthSuccess = "/auth/success",

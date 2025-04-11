@@ -33,7 +33,7 @@ const UserProfile = () => {
 
   return (
     <Link
-      href={Routes.Profile}
+      href={user.accountType === "SHELTER" ? Routes.ShelterProfile : Routes.Profile}
       className={cn(
         "flex items-center justify-center gap-3 hover:bg-transparent",
       )}
