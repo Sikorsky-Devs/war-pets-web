@@ -1,20 +1,19 @@
 export type PetType = "DOG" | "CAT" | "BIRD" | "FISH" | "DOMESTIC" | "EXOTIC" | "OTHER";
 export type PetHealthType = "HEALTHY" | "INJURED" | "SICK" | "UNDER_TREATMENT" | "DISABLED" | "CRITICAL";
 
-
 export interface Pet {
   id: string;
   shelterId: string;
   volunteerId: string | null;
   isApproved: boolean;
   name: string | null;
-  petType: PetType;
+  type: PetType;
   breed: string | null;
   age: number | null;
   address: string | null;
   imageLink: string | null;
   description: string | null;
-  healthStatus: PetHealthType;
+  heathStatus: PetHealthType;
 }
 export interface PetRequest {
   id: string
@@ -32,7 +31,7 @@ export interface PetSearchRequest {
   userName: string
   userEmail: string
   requestDate: string
-  petType: PetType | null
+  type: PetType | null
   breed: string | null
   ageFrom: number | null
   ageTo: number | null

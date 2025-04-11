@@ -16,7 +16,7 @@ const sampleUserSearchRequests: PetSearchRequest[] = [
     userName: "Марія Коваленко",
     userEmail: "maria.k@example.com",
     requestDate: "2023-05-10",
-    petType: "DOG",
+    type: "DOG",
     breed: "Лабрадор",
     ageFrom: 1,
     ageTo: 3,
@@ -30,7 +30,7 @@ const sampleUserSearchRequests: PetSearchRequest[] = [
     userName: "Олександр Петренко",
     userEmail: "oleksandr.p@example.com",
     requestDate: "2023-05-12",
-    petType: "CAT",
+    type: "CAT",
     breed: null,
     ageFrom: 0,
     ageTo: 1,
@@ -44,7 +44,7 @@ const sampleUserSearchRequests: PetSearchRequest[] = [
     userName: "Наталія Шевченко",
     userEmail: "natalia.s@example.com",
     requestDate: "2023-05-15",
-    petType: "DOG",
+    type: "DOG",
     breed: "Німецька вівчарка",
     ageFrom: null,
     ageTo: null,
@@ -55,7 +55,7 @@ const sampleUserSearchRequests: PetSearchRequest[] = [
   },
 ]
 
-const UserSearchRequests = ({ shelterId }: { shelterId: string }) => {
+const UserSearchRequests = () => {
   // In a real app, you would filter requests by shelterId from your database
   const searchRequests = sampleUserSearchRequests;
 
@@ -87,7 +87,7 @@ const UserSearchRequests = ({ shelterId }: { shelterId: string }) => {
                   <div className="space-y-4">
                     <div>
                       <h4 className="text-sm font-medium text-muted-foreground">Тип тварини</h4>
-                      <p>{request.petType ? formatPetType(request.petType) : "Будь-який"}</p>
+                      <p>{request.type ? formatPetType(request.type) : "Будь-який"}</p>
                     </div>
                     <div>
                       <h4 className="text-sm font-medium text-muted-foreground">Порода</h4>

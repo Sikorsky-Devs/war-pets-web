@@ -1,50 +1,50 @@
 "use client"
 
+import {zodResolver} from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import {useForm} from "react-hook-form";
+import {toast} from "sonner";
 
+import {addPet} from "@/api/pets/pets-api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {type AddPetFormData, addPetSchema} from "@/features/shelter-profile/types/shelter-profile-types";
+import useAuthStore from "@/store/use-auth-store";
 import type { PetHealthType, PetType } from "@/types/pet";
 
 type AddPetFormProps = {
   onClose: () => void;
-  shelterId: string;
 }
 
-const AddPetForm = ({ onClose, shelterId }: AddPetFormProps) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    petType: "" as PetType,
-    breed: "",
-    age: "",
-    address: "",
-    description: "",
-    healthStatus: "" as PetHealthType,
-  })
+const AddPetForm = ({ onClose }: AddPetFormProps) => {
+  const { user: shelter } = useAuthStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+  } = useForm<AddPetFormData>({ resolver: zodResolver(addPetSchema) });
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  const onSubmit = async (data: AddPetFormData) => {
+    try {
+      console.log(data)
+      await addPet({
+        ...data,
+        shelterId: shelter.id,
+        isApproved: true
+      });
+      toast.success("Тварину додано до притулку");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    // In a real app, you would submit this data to your API
-    console.log({
-      ...formData,
-      shelterId,
-      age: formData.age ? Number.parseInt(formData.age) : null,
-      isApproved: true,
-      volunteerId: null,
-    })
-
-    onClose()
+      onClose()
+    } catch (e) {
+      if (e instanceof Error) toast.error(e.message);
+      console.error(e);
+    }
   }
 
   return (
@@ -56,21 +56,24 @@ const AddPetForm = ({ onClose, shelterId }: AddPetFormProps) => {
         </Button>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-2">
-            <Label htmlFor="name">Ім&#39;я тварини</Label>
-            <Input
-              id="name"
-              placeholder="Введіть ім'я тварини"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-            />
-          </div>
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            id="name"
+            type="text"
+            label="Ім'я"
+            error={errors.name?.message}
+            placeholder="Введіть ім'я тварини"
+            {...register("name")}
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="petType">Тип тварини</Label>
-              <Select value={formData.petType} onValueChange={(value) => handleChange("petType", value as PetType)}>
+              <Select
+                onValueChange={(value: PetType) =>
+                  setValue("type", value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Оберіть тип" />
                 </SelectTrigger>
@@ -84,38 +87,36 @@ const AddPetForm = ({ onClose, shelterId }: AddPetFormProps) => {
                   <SelectItem value="OTHER">Інше</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.type?.message && <p className="text-sm text-red-500">{errors.type.message}</p>}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="breed">Порода</Label>
-              <Input
-                id="breed"
-                placeholder="Введіть породу"
-                value={formData.breed}
-                onChange={(e) => handleChange("breed", e.target.value)}
-              />
-            </div>
+            <Input
+              id="breed"
+              type="text"
+              label="Порода"
+              error={errors.breed?.message}
+              placeholder="Введіть породу"
+              {...register("breed")}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="age">Вік (років)</Label>
-              <Input
-                id="age"
-                placeholder="Напр. 2"
-                type="number"
-                min="0"
-                step="0.5"
-                value={formData.age}
-                onChange={(e) => handleChange("age", e.target.value)}
-              />
-            </div>
+            <Input
+              id="age"
+              type="number"
+              min="0"
+              step="0.5"
+              label="Вік (років)"
+              placeholder="Напр. 2"
+              {...register("age", { valueAsNumber: true })}
+            />
 
             <div className="space-y-2">
               <Label htmlFor="healthStatus">Стан здоров&#39;я</Label>
               <Select
-                value={formData.healthStatus}
-                onValueChange={(value) => handleChange("healthStatus", value as PetHealthType)}
+                onValueChange={(value: PetHealthType) =>
+                  setValue("heathStatus", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Оберіть стан" />
@@ -129,23 +130,25 @@ const AddPetForm = ({ onClose, shelterId }: AddPetFormProps) => {
                   <SelectItem value="CRITICAL">Критичний стан</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.heathStatus?.message && <p className="text-sm text-red-500">{errors.heathStatus.message}</p>}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="address">Адреса</Label>
-            <Input
-              id="address"
-              placeholder="Введіть адресу, де знайдено/розташовано тварину"
-              value={formData.address}
-              onChange={(e) => handleChange("address", e.target.value)}
-            />
-          </div>
+          <Input
+            id="address"
+            type="text"
+            min="0"
+            step="0.5"
+            label="Адреса"
+            error={errors.address?.message}
+            placeholder="Введіть адресу, де знайдено/розташовано тварину"
+            {...register("address")}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="image">Фотографія</Label>
-            <Input id="image" type="file" accept="image/*" />
-          </div>
+          {/*<div className="space-y-2">*/}
+          {/*  <Label htmlFor="image">Фотографія</Label>*/}
+          {/*  <Input id="image" type="file" accept="image/*" />*/}
+          {/*</div>*/}
 
           <div className="space-y-2">
             <Label htmlFor="description">Опис</Label>
@@ -153,8 +156,7 @@ const AddPetForm = ({ onClose, shelterId }: AddPetFormProps) => {
               id="description"
               placeholder="Опишіть характер тварини, її потреби тощо"
               rows={4}
-              value={formData.description}
-              onChange={(e) => handleChange("description", e.target.value)}
+              {...register("description")}
             />
           </div>
         </form>
@@ -163,7 +165,7 @@ const AddPetForm = ({ onClose, shelterId }: AddPetFormProps) => {
         <Button variant="outline" onClick={onClose}>
           Скасувати
         </Button>
-        <Button type="submit" onClick={handleSubmit}>
+        <Button isLoading={isSubmitting} type="submit" onClick={handleSubmit(onSubmit)}>
           Додати тварину
         </Button>
       </CardFooter>

@@ -2,8 +2,9 @@
 
 import { Info,Pencil, Trash2 } from "lucide-react"
 import Image from "next/image"
-import { useState } from "react"
+import {useEffect, useState} from "react"
 
+import {deletePetById, getAllPets, getPetById} from "@/api/pets/pets-api";
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
@@ -13,60 +14,21 @@ import { formatHealthStatus,formatPetType, getHealthStatusColor } from "@/utils/
 import EditPetDialog from "./edit-pet-dialog"
 import PetDetailsDialog from "./pet-details-dialog"
 
-// Sample data - in a real app, this would come from your database
-const samplePets: Pet[] = [
-  {
-    id: "pet-1",
-    shelterId: "shelter-123",
-    volunteerId: null,
-    isApproved: true,
-    name: "Макс",
-    petType: "DOG",
-    breed: "Золотистий ретривер",
-    age: 3,
-    address: "Київ, Україна",
-    imageLink: "/placeholder.svg?height=200&width=200",
-    description: "Дружелюбний та енергійний пес, який шукає люблячу домівку.",
-    healthStatus: "HEALTHY",
-  },
-  {
-    id: "pet-2",
-    shelterId: "shelter-123",
-    volunteerId: null,
-    isApproved: true,
-    name: "Луна",
-    petType: "CAT",
-    breed: "Сіамська",
-    age: 2,
-    address: "Київ, Україна",
-    imageLink: "/placeholder.svg?height=200&width=200",
-    description: "Спокійна та ласкава кішка, яка любить обійми.",
-    healthStatus: "HEALTHY",
-  },
-  {
-    id: "pet-3",
-    shelterId: "shelter-123",
-    volunteerId: null,
-    isApproved: true,
-    name: "Рокі",
-    petType: "DOG",
-    breed: "Німецька вівчарка",
-    age: 4,
-    address: "Київ, Україна",
-    imageLink: "/placeholder.svg?height=200&width=200",
-    description: "Вірний та захисний пес, який відновлюється після травми.",
-    healthStatus: "UNDER_TREATMENT",
-  },
-]
-
-const ShelterPets = ({ shelterId }: { shelterId: string }) => {
+const ShelterPets = () => {
+  const [pets, setPets] = useState<Pet[]>([]);
   const [editingPet, setEditingPet] = useState<Pet | null>(null)
   const [viewingPet, setViewingPet] = useState<Pet | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
 
-  // In a real app, you would filter pets by shelterId from your database
-  const pets = samplePets.filter((pet) => pet.shelterId === shelterId)
+  const fetchAllPets = async () => {
+    const resultPets = await getAllPets();
+    const fullPets = await Promise.all(
+      resultPets.common.map((pet) => getPetById(pet.id))
+    );
+
+    setPets(fullPets);
+  };
 
   const handleEditClick = (pet: Pet) => {
     setEditingPet(pet)
@@ -77,6 +39,17 @@ const ShelterPets = ({ shelterId }: { shelterId: string }) => {
     setViewingPet(pet)
     setIsDetailsDialogOpen(true)
   }
+
+  const handleDeletePet = async (petId: string) => {
+    await deletePetById(petId)
+    setPets((prev) => prev.filter((pet) => pet.id !== petId))
+  }
+
+  useEffect(() => {
+    fetchAllPets().catch((error) => {
+      console.error("Error fetching pets:", error);
+    });
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -95,8 +68,8 @@ const ShelterPets = ({ shelterId }: { shelterId: string }) => {
                   fill
                   className="object-cover"
                 />
-                <Badge className={`absolute top-2 right-2 ${getHealthStatusColor(pet.healthStatus)}`}>
-                  {formatHealthStatus(pet.healthStatus)}
+                <Badge className={`absolute top-2 right-2 ${getHealthStatusColor(pet.heathStatus)}`}>
+                  {formatHealthStatus(pet.heathStatus)}
                 </Badge>
               </div>
               <CardHeader>
@@ -104,7 +77,7 @@ const ShelterPets = ({ shelterId }: { shelterId: string }) => {
                   <div>
                     <h3 className="font-bold text-lg">{pet.name ?? "Безіменна тварина"}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {formatPetType(pet.petType)} • {pet.breed ?? "Невідома порода"} •{" "}
+                      {formatPetType(pet.type)} • {pet.breed ?? "Невідома порода"} •{" "}
                       {pet.age ? `${pet.age} років` : "Вік невідомий"}
                     </p>
                   </div>
@@ -116,15 +89,33 @@ const ShelterPets = ({ shelterId }: { shelterId: string }) => {
               </CardContent>
 
               <CardFooter className="flex flex-col gap-2">
-                <Button variant="outline" size="sm" className="w-full" onClick={() => handleViewDetailsClick(pet)}>
-                  <Info className="h-4 w-4 mr-2"/> Деталі
+                <Button
+                  icon={<Info className="h-4 w-4 mr-2"/> }
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleViewDetailsClick(pet)}
+                >
+                  Деталі
                 </Button>
                 <div className="flex flex-wrap w-full gap-2">
-                  <Button className="flex-1" variant="outline" size="sm" onClick={() => handleEditClick(pet)}>
-                    <Pencil className="h-4 w-4 mr-2"/> Редагувати
+                  <Button
+                    icon={<Pencil className="h-4 w-4 mr-2"/>}
+                    className="flex-1"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditClick(pet)}
+                  >
+                    Редагувати
                   </Button>
-                  <Button className="flex-1" variant="destructive" size="sm">
-                    <Trash2 className="h-4 w-4 mr-2"/> Видалити
+                  <Button
+                    icon={<Trash2 className="h-4 w-4 mr-2"/>}
+                    className="flex-1"
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDeletePet(pet.id)}
+                  >
+                    Видалити
                   </Button>
                 </div>
               </CardFooter>

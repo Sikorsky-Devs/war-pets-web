@@ -35,7 +35,7 @@ const PetDetailsDialog = ({ open, onOpenChange, pet}: PetDetailsDialogProps) => 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="font-semibold text-sm text-muted-foreground">Тип</h3>
-              <p>{formatPetType(pet.petType)}</p>
+              <p>{formatPetType(pet.type)}</p>
             </div>
             <div>
               <h3 className="font-semibold text-sm text-muted-foreground">Порода</h3>
@@ -47,7 +47,7 @@ const PetDetailsDialog = ({ open, onOpenChange, pet}: PetDetailsDialogProps) => 
             </div>
             <div>
               <h3 className="font-semibold text-sm text-muted-foreground">Стан здоров&#39;я</h3>
-              <Badge className={getHealthStatusColor(pet.healthStatus)}>{formatHealthStatus(pet.healthStatus)}</Badge>
+              <Badge className={getHealthStatusColor(pet.heathStatus)}>{formatHealthStatus(pet.heathStatus)}</Badge>
             </div>
           </div>
 

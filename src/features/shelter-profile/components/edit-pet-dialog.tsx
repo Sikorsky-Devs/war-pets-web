@@ -1,7 +1,11 @@
 "use client"
 
-import { useEffect,useState } from "react";
+import {zodResolver} from "@hookform/resolvers/zod";
+import React from "react";
+import {useForm} from "react-hook-form";
+import {toast} from "sonner";
 
+import {editPetById} from "@/api/pets/pets-api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,6 +19,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  type AddPetFormData,
+  type EditPetFormData,
+  editPetSchema
+} from "@/features/shelter-profile/types/shelter-profile-types";
 import type { Pet, PetHealthType, PetType } from "@/types/pet";
 
 type EditPetDialogProps = {
@@ -24,56 +33,29 @@ type EditPetDialogProps = {
 }
 
 const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
-  const [formData, setFormData] = useState<{
-    name: string
-    petType: PetType
-    breed: string
-    age: string
-    address: string
-    description: string
-    healthStatus: PetHealthType
-  }>({
-    name: "",
-    petType: "DOG",
-    breed: "",
-    age: "",
-    address: "",
-    description: "",
-    healthStatus: "HEALTHY",
-  })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+  } = useForm<EditPetFormData>({ resolver: zodResolver(editPetSchema) });
 
-  useEffect(() => {
-    if (pet) {
-      setFormData({
-        name: pet.name ?? "",
-        petType: pet.petType,
-        breed: pet.breed ?? "",
-        age: pet.age !== null ? pet.age.toString() : "",
-        address: pet.address ?? "",
-        description: pet.description ?? "",
-        healthStatus: pet.healthStatus,
-      })
+  const onSubmit = async (data: AddPetFormData) => {
+    try {
+      if (pet) {
+        await editPetById(pet.id, {
+          ...data,
+          isApproved: true
+        });
+
+        onOpenChange(false)
+        window.location.reload();
+      }
+    } catch (e) {
+      if (e instanceof Error) toast.error(e.message);
+      console.error(e);
     }
-  }, [pet])
-
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
   }
-
-  const handleSubmit = () => {
-    if (!pet) return
-
-    // In a real app, you would submit this data to your API
-    console.log({
-      id: pet.id,
-      ...formData,
-      age: formData.age ? Number.parseInt(formData.age) : null,
-    })
-
-    onOpenChange(false)
-  }
-
-  if (!pet) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -84,16 +66,24 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
             Внесіть зміни до інформації про тварину тут. Натисніть зберегти, коли закінчите.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-3">
-          <div className="space-y-2">
-            <Label htmlFor="edit-name">Ім&#39;я тварини</Label>
-            <Input id="edit-name" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} />
-          </div>
+        <form className="grid gap-4 py-3" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            id="name"
+            type="text"
+            label="Ім'я"
+            error={errors.name?.message}
+            placeholder="Введіть ім'я тварини"
+            {...register("name")}
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-petType">Тип тварини</Label>
-              <Select value={formData.petType} onValueChange={(value) => handleChange("petType", value as PetType)}>
+              <Label htmlFor="petType">Тип тварини</Label>
+              <Select
+                onValueChange={(value: PetType) =>
+                  setValue("type", value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Оберіть тип" />
                 </SelectTrigger>
@@ -107,32 +97,36 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
                   <SelectItem value="OTHER">Інше</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.type?.message && <p className="text-sm text-red-500">{errors.type.message}</p>}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="edit-breed">Порода</Label>
-              <Input id="edit-breed" value={formData.breed} onChange={(e) => handleChange("breed", e.target.value)} />
-            </div>
+            <Input
+              id="breed"
+              type="text"
+              label="Порода"
+              error={errors.breed?.message}
+              placeholder="Введіть породу"
+              {...register("breed")}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-age">Вік (років)</Label>
-              <Input
-                id="edit-age"
-                type="number"
-                min="0"
-                step="0.5"
-                value={formData.age}
-                onChange={(e) => handleChange("age", e.target.value)}
-              />
-            </div>
+            <Input
+              id="age"
+              type="number"
+              min="0"
+              step="0.5"
+              label="Вік (років)"
+              placeholder="Напр. 2"
+              {...register("age", { valueAsNumber: true })}
+            />
 
             <div className="space-y-2">
-              <Label htmlFor="edit-healthStatus">Стан здоров&#39;я</Label>
+              <Label htmlFor="healthStatus">Стан здоров&#39;я</Label>
               <Select
-                value={formData.healthStatus}
-                onValueChange={(value) => handleChange("healthStatus", value as PetHealthType)}
+                onValueChange={(value: PetHealthType) =>
+                  setValue("heathStatus", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Оберіть стан" />
@@ -146,30 +140,33 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
                   <SelectItem value="CRITICAL">Критичний стан</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.heathStatus?.message && <p className="text-sm text-red-500">{errors.heathStatus.message}</p>}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="edit-address">Адреса</Label>
-            <Input
-              id="edit-address"
-              value={formData.address}
-              onChange={(e) => handleChange("address", e.target.value)}
-            />
-          </div>
+          <Input
+            id="address"
+            type="text"
+            min="0"
+            step="0.5"
+            label="Адреса"
+            error={errors.address?.message}
+            placeholder="Введіть адресу, де знайдено/розташовано тварину"
+            {...register("address")}
+          />
 
           <div className="space-y-2">
-            <Label htmlFor="edit-description">Опис</Label>
+            <Label htmlFor="description">Опис</Label>
             <Textarea
-              id="edit-description"
+              id="description"
+              placeholder="Опишіть характер тварини, її потреби тощо"
               rows={4}
-              value={formData.description}
-              onChange={(e) => handleChange("description", e.target.value)}
+              {...register("description")}
             />
           </div>
-        </div>
+        </form>
         <DialogFooter>
-          <Button type="submit" onClick={handleSubmit}>
+          <Button type="submit" onClick={handleSubmit(onSubmit)} isLoading={isSubmitting}>
             Зберегти зміни
           </Button>
         </DialogFooter>

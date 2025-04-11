@@ -26,13 +26,13 @@ const sampleRequests: PetRequest[] = [
       volunteerId: "volunteer-1",
       isApproved: false,
       name: "Белла",
-      petType: "DOG",
+      type: "DOG",
       breed: "Лабрадор",
       age: 1,
       address: "Київ, Україна",
       imageLink: "/placeholder.svg?height=200&width=200",
       description: "Знайдена біля центрального парку. Дуже дружелюбна і добре вихована.",
-      healthStatus: "HEALTHY",
+      heathStatus: "HEALTHY",
     },
   },
   {
@@ -48,18 +48,18 @@ const sampleRequests: PetRequest[] = [
       volunteerId: "volunteer-2",
       isApproved: false,
       name: "Олівер",
-      petType: "CAT",
+      type: "CAT",
       breed: "Табі",
       age: 0,
       address: "Львів, Україна",
       imageLink: "/placeholder.svg?height=200&width=200",
       description: "Приблизно 6 місяців. Дуже грайливе і ласкаве.",
-      healthStatus: "HEALTHY",
+      heathStatus: "HEALTHY",
     },
   },
 ]
 
-const PetRequests = ({ shelterId }: { shelterId: string }) => {
+const PetRequests = () => {
   const [viewingPet, setViewingPet] = useState<Pet | null>(null)
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
 
@@ -96,7 +96,7 @@ const PetRequests = ({ shelterId }: { shelterId: string }) => {
                       <div>
                         <h3 className="font-bold text-lg">{request.pet.name ?? "Безіменна тварина"}</h3>
                         <p className="text-sm text-muted-foreground">
-                          {formatPetType(request.pet.petType)} • {request.pet.breed ?? "Невідома порода"} •{" "}
+                          {formatPetType(request.pet.type)} • {request.pet.breed ?? "Невідома порода"} •{" "}
                           {request.pet.age !== null
                             ? request.pet.age < 1
                               ? "Менше 1 року"
