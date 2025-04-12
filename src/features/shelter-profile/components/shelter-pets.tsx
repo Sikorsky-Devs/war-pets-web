@@ -15,6 +15,8 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
+import useAuthStore from "@/store/use-auth-store";
 import type { Pet } from "@/types/pet";
 import {
   formatHealthStatus,
@@ -27,6 +29,7 @@ import EditPetDialog from "./edit-pet-dialog";
 import PetDetailsDialog from "./pet-details-dialog";
 
 const ShelterPets = () => {
+  const { user } = useAuthStore();
   const [editingPet, setEditingPet] = useState<Pet | null>(null);
   const [viewingPet, setViewingPet] = useState<Pet | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -34,13 +37,7 @@ const ShelterPets = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: pets = [], isLoading } = useQuery({
-    queryKey: ["pets"],
-    queryFn: async () => {
-      const resultPets = await getAllPets();
-      return Promise.all(resultPets.common.map((pet) => getPetById(pet.id)));
-    },
-  });
+  const { pets, isLoading } = usePetsQuery(user.id);
 
   const deleteMutation = useMutation({
     mutationFn: (petId: string) => deletePetById(petId),
@@ -174,7 +171,7 @@ const ShelterPets = () => {
                     }
                   >
                     {deleteMutation.isPending &&
-                      deleteMutation.variables === pet.id ? (
+                    deleteMutation.variables === pet.id ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       <Trash2 className="mr-2 h-4 w-4" />

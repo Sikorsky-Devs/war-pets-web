@@ -2,14 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Heart, Info, MapPin, MessageCircleIcon } from "lucide-react";
+import { Heart, Info, InfoIcon, MapPin, MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { memo, useState } from "react";
 import { toast } from "sonner";
 
 import { getPetById } from "@/api/pets/pets.api";
 import { savePet, unsavePet } from "@/api/pets/pets.api";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getPetAge } from "@/utils/pet-utils";
+import { cn } from "@/utils/styles-utils";
 
 interface PetDetailsModalProps {
   petId: string;
@@ -136,7 +138,20 @@ const PetDetailsModal = memo(
                   </div>
                 )}
 
-                <div>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    className={cn(
+                      buttonVariants({
+                        size: "sm",
+                        variant: "outline",
+                      }),
+                      "gap-2",
+                    )}
+                    href={`/shelter/${pet.shelterId}`}
+                  >
+                    <InfoIcon className="size-4" />
+                    <span>Детальніше про притулок</span>
+                  </Link>
                   <Button icon={<MessageCircleIcon />} size="sm">
                     Чат з притулком
                   </Button>
