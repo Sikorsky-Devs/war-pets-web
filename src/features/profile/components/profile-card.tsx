@@ -1,3 +1,4 @@
+"use client";
 import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
+import UpdateProfileModal from "@/features/profile/components/update-profile-modal";
+import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
 import { logoutUser, removeAuthToken } from "@/utils/auth-utils";
 import { getAccountType, getFullName } from "@/utils/user-utils";
@@ -15,8 +18,12 @@ import { getAccountType, getFullName } from "@/utils/user-utils";
 import { profileData } from "../../../../data/profile-data";
 
 const ProfileCard = () => {
-  const { user } = useAuthStore();
   const { replace } = useRouter();
+  const {
+    user: { id },
+  } = useAuthStore();
+
+  const { user } = useUserQuery(id);
 
   const accountType = getAccountType(user?.accountType);
   const fullName = getFullName(
@@ -45,7 +52,7 @@ const ProfileCard = () => {
               />
             </div>
             <h1 className="text-2xl font-bold">{fullName}</h1>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
+            <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
         </div>
 
@@ -69,13 +76,17 @@ const ProfileCard = () => {
             );
           })}
         </div>
-        <Button
-          icon={<LogOutIcon />}
-          variant="destructive"
-          onClick={handleSignOut}
-        >
-          Вийти
-        </Button>
+        <div className="flex w-full gap-2">
+          <Button
+            icon={<LogOutIcon />}
+            className="w-full"
+            variant="destructive"
+            onClick={handleSignOut}
+          >
+            Вийти
+          </Button>
+          <UpdateProfileModal />
+        </div>
       </CardContent>
     </Card>
   );

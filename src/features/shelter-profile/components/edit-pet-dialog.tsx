@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import {zodResolver} from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import {useForm} from "react-hook-form";
-import {toast} from "sonner";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import {editPetById} from "@/api/pets/pets-api";
+import { editPetById } from "@/api/pets/pets-api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,20 +17,27 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   type AddPetFormData,
   type EditPetFormData,
-  editPetSchema
+  editPetSchema,
 } from "@/features/shelter-profile/types/shelter-profile-types";
+import { queryClient } from "@/providers/query-provider";
 import type { Pet, PetHealthType, PetType } from "@/types/pet";
 
 type EditPetDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   pet: Pet | null;
-}
+};
 
 const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
   const {
@@ -45,17 +52,17 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
       if (pet) {
         await editPetById(pet.id, {
           ...data,
-          isApproved: true
+          isApproved: true,
         });
 
-        onOpenChange(false)
-        window.location.reload();
+        onOpenChange(false);
+        await queryClient.invalidateQueries({ queryKey: ["pets"] });
       }
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
       console.error(e);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -63,7 +70,8 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
         <DialogHeader className="flex flex-col gap-2">
           <DialogTitle>Редагувати інформацію про тварину</DialogTitle>
           <DialogDescription>
-            Внесіть зміни до інформації про тварину тут. Натисніть зберегти, коли закінчите.
+            Внесіть зміни до інформації про тварину тут. Натисніть зберегти,
+            коли закінчите.
           </DialogDescription>
         </DialogHeader>
         <form className="grid gap-4 py-3" onSubmit={handleSubmit(onSubmit)}>
@@ -80,9 +88,7 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
             <div className="space-y-2">
               <Label htmlFor="petType">Тип тварини</Label>
               <Select
-                onValueChange={(value: PetType) =>
-                  setValue("type", value)
-                }
+                onValueChange={(value: PetType) => setValue("type", value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Оберіть тип" />
@@ -97,7 +103,9 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
                   <SelectItem value="OTHER">Інше</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.type?.message && <p className="text-sm text-red-500">{errors.type.message}</p>}
+              {errors.type?.message && (
+                <p className="text-sm text-red-500">{errors.type.message}</p>
+              )}
             </div>
 
             <Input
@@ -140,7 +148,11 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
                   <SelectItem value="CRITICAL">Критичний стан</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.heathStatus?.message && <p className="text-sm text-red-500">{errors.heathStatus.message}</p>}
+              {errors.heathStatus?.message && (
+                <p className="text-sm text-red-500">
+                  {errors.heathStatus.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -166,13 +178,17 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
           </div>
         </form>
         <DialogFooter>
-          <Button type="submit" onClick={handleSubmit(onSubmit)} isLoading={isSubmitting}>
+          <Button
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            isLoading={isSubmitting}
+          >
             Зберегти зміни
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
 export default EditPetDialog;

@@ -5,14 +5,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { signIn } from "@/api/auth/auth.api";
+import { type SignInFormData, signInSchema } from "@/api/auth/auth.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Routes } from "@/constants/navigation";
-import { signIn } from "@/features/auth/api/auth-api";
-import {
-  type SignInFormData,
-  signInSchema,
-} from "@/features/auth/types/auth-types";
 import { getUser, setAuthToken } from "@/utils/auth-utils";
 import { cn } from "@/utils/styles-utils";
 

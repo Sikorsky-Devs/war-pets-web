@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { signUp } from "@/api/auth/auth.api";
+import { type SignUpFormData, signUpSchema } from "@/api/auth/auth.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,11 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Routes } from "@/constants/navigation";
-import { signUp } from "@/features/auth/api/auth-api";
-import {
-  type SignUpFormData,
-  signUpSchema,
-} from "@/features/auth/types/auth-types";
 import { cn } from "@/utils/styles-utils";
 
 interface SignUpFormProps {

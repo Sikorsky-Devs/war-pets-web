@@ -1,10 +1,10 @@
-import { API_URL } from "@/constants/global";
 import {
   type EmailResendRequest,
   type SignInFormData,
   type SignUpFormData,
   type TokenResponse,
-} from "@/features/auth/types/auth-types";
+} from "@/api/auth/auth.dto";
+import { API_URL } from "@/constants/global";
 import { type ErrorResponse } from "@/types/api";
 import { type User } from "@/types/user";
 import { generateAuthHeaders } from "@/utils/auth-utils";

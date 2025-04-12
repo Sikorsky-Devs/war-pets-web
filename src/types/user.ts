@@ -1,4 +1,5 @@
 export type AccountType = "GUEST" | "SHELTER" | "VOLUNTEER";
+export type ShelterType = "CLINIC" | "SHELTER" | "KENNEL" | "OTHER";
 
 export interface User {
   id: string;
@@ -9,4 +10,11 @@ export interface User {
   name: string | null;
   accountType: AccountType;
   avatarLink: string | null;
+}
+
+export interface ShelterUser extends User {
+  shelterType: ShelterType;
+  address: string | null;
+  description: string | null;
+  donationLink: string | null;
 }

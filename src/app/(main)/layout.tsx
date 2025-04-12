@@ -6,12 +6,12 @@ import Footer from "@/components/footer/footer";
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main>{children}</main>
+      <main className="h-full flex-1">{children}</main>
       <ChatPopover />
       <Footer />
-    </>
+    </div>
   );
 };
 

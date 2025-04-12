@@ -1,4 +1,4 @@
-import { getMe } from "@/features/auth/api/auth-api";
+import { getMe } from "@/api/auth/auth.api";
 import { guestUser, hydrateAuthStore } from "@/store/use-auth-store";
 import { type AccountType } from "@/types/user";
 
@@ -42,4 +42,8 @@ export const logoutUser = () => {
 
 export const isGuest = (accountType: AccountType) => {
   return accountType === "GUEST";
+};
+
+export const isShelter = (accountType: AccountType) => {
+  return accountType === "SHELTER";
 };
