@@ -102,9 +102,9 @@ export const deletePetById = async (petId: string) => {
   }
 };
 
-export const getAllPets = async (params?: string) => {
+export const getAllPets = async (params?: URLSearchParams) => {
   try {
-    const response = await fetch(`${API_URL}/pets?${params}`, {
+    const response = await fetch(`${API_URL}/pets?${params?.toString()}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -141,5 +141,64 @@ export const updatePetImage = async (formData: FormData, id: string) => {
     }
   } catch (e) {
     throw e;
+  }
+};
+
+export const getSavedPets = async () => {
+  try {
+    const response = await fetch(`${API_URL}/save`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json();
+      throw new Error(error.message);
+    }
+
+    const data = await response.json() as { pet: Pet }[];
+    return data.map(info => info.pet);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const savePet = async (petId: string) => {
+  try {
+    const response = await fetch(`${API_URL}/save/${petId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json();
+      throw new Error(error.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unsavePet = async (petId: string) => {
+  try {
+    const response = await fetch(`${API_URL}/save/${petId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json();
+      throw new Error(error.message);
+    }
+  } catch (error) {
+    throw error;
   }
 };

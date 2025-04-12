@@ -35,7 +35,7 @@ export const getHealthStatusColor = (status: PetHealthType): string => {
     case "CRITICAL":
       return "bg-red-500 hover:bg-red-600";
     default:
-      return "bg-slate-500 hover:bg-slate-600";
+      return "bg-gray-500 text-black hover:bg-gray-600";
   }
 };
 

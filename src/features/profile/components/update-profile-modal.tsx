@@ -15,7 +15,6 @@ import {
 import ProfileUpdateForm from "@/features/profile/components/update-profile-form";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
-import { type ShelterUser } from "@/types/user";
 
 const ProfileUpdateModal = () => {
   const {

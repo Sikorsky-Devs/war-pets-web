@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { Pet } from "@/types/pet";
-import { formatHealthStatus,formatPetType, getHealthStatusColor } from "@/utils/shelter-pets-utils";
+import { formatHealthStatus, formatPetType, getHealthStatusColor } from "@/utils/shelter-pets-utils";
 
 type PetDetailsDialogProps = {
   open: boolean;
@@ -13,7 +13,7 @@ type PetDetailsDialogProps = {
   pet: Pet | null;
 }
 
-const PetDetailsDialog = ({ open, onOpenChange, pet}: PetDetailsDialogProps) => {
+const PetDetailsDialog = ({ open, onOpenChange, pet }: PetDetailsDialogProps) => {
   if (!pet) return null
 
   return (

@@ -5,7 +5,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { editPetById } from "@/api/pets/pets-api";
+import { editPetById } from "@/api/pets/pets.api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

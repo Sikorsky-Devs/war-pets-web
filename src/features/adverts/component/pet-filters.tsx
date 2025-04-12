@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueryState } from "nuqs";
+import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import type React from "react";
 import { useState } from "react";
 
@@ -16,96 +16,89 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { HealthStatus, PetType } from "@/features/adverts/adverts.page";
+import { PET_HEALTH_STATUS_MAPPER, PET_TYPE_MAPPER } from "@/constants/mappers";
 
 const PetFilters = () => {
-  const [search, setSearch] = useQueryState("search");
+  const [search, setSearch] = useQueryState("search", parseAsString.withDefault(""));
   const [type, setType] = useQueryState("type");
-  const [ageFrom, setAgeFrom] = useQueryState("ageFrom", {
-    defaultValue: undefined,
-    parse: (value) => (value ? Number.parseInt(value) : undefined),
-  });
-  const [ageTo, setAgeTo] = useQueryState("ageTo", {
-    defaultValue: undefined,
-    parse: (value) => (value ? Number.parseInt(value) : undefined),
-  });
+  const [ageFrom, setAgeFrom] = useQueryState("ageFrom", parseAsInteger.withDefault(0));
+  const [ageTo, setAgeTo] = useQueryState("ageTo", parseAsInteger.withDefault(20));
   const [healthStatus, setHealthStatus] = useQueryState("healthStatus");
 
   const [ageRange, setAgeRange] = useState<[number, number]>([
     ageFrom ?? 0,
     ageTo ?? 20,
   ]);
-  const [searchValue, setSearchValue] = useState(search);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-  };
-
-  const handleSearchSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await setSearch(search);
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await setSearch(e.target.value);
   };
 
   const handleAgeRangeChange = (values: number[]) => {
-    setAgeRange([values[0], values[1]]);
+    setAgeRange([values[0] ?? 0, values[1] ?? 20]);
   };
 
-  const applyAgeRange = async (values: string[]) => {
-    await setAgeFrom(values[0]);
-    await setAgeTo(values[1]);
+  const handleTypeChange = async (value: string) => {
+    if (value === "all") {
+      await setType(null);
+    } else {
+      await setType(value);
+    }
   };
 
-  const resetFilters = () => {
-    setSearchValue("");
+  const handleHealthStatusChange = async (value: string) => {
+    if (value === "any") {
+      await setHealthStatus(null);
+    } else {
+      await setHealthStatus(value);
+    }
+  };
+
+  const applyAgeRange = async (values: number[]) => {
+    await setAgeFrom(values[0] ?? 0);
+    await setAgeTo(values[1] ?? 20);
+  };
+
+  const resetFilters = async () => {
+    await setSearch("");
     setAgeRange([0, 20]);
   };
 
   return (
     <Card className="h-fit">
       <CardHeader>
-        <CardTitle>Filters</CardTitle>
+        <CardTitle>Фільтри</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <form onSubmit={handleSearchSubmit}>
-          <div className="space-y-2">
-            <Label htmlFor="search">Search</Label>
-            <div className="flex gap-2">
-              <Input
-                id="search"
-                placeholder="Search pets..."
-                value={searchValue}
-                onChange={handleSearchChange}
-              />
-              <Button type="submit" size="sm">
-                Search
-              </Button>
-            </div>
-          </div>
-        </form>
+        <Input
+          id="search"
+          placeholder="Пошук тварин..."
+          value={search ?? ""}
+          onChange={handleSearchChange}
+        />
 
-        {/* Pet Type */}
         <div className="space-y-2">
-          <Label htmlFor="type">Pet Type</Label>
-          <Select value={type ?? ""} onValueChange={(value) => setType(value)}>
+          <Label htmlFor="type">Тип тварини</Label>
+          <Select value={type ?? ""} onValueChange={handleTypeChange}>
             <SelectTrigger id="type">
-              <SelectValue placeholder="Select type" />
+              <SelectValue placeholder="Виберіть тип" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value={PetType.DOG}>Dog</SelectItem>
-              <SelectItem value={PetType.CAT}>Cat</SelectItem>
-              <SelectItem value={PetType.BIRD}>Bird</SelectItem>
-              <SelectItem value={PetType.OTHER}>Other</SelectItem>
+              <SelectItem value="all">Всі типи</SelectItem>
+              {Object.entries(PET_TYPE_MAPPER).map(([key, value]) => (
+                <SelectItem key={key} value={key}>
+                  {value}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Age Range */}
         <div className="space-y-4">
           <div className="flex justify-between">
-            <Label>Age Range</Label>
+            <Label>Віковий діапазон</Label>
             <span className="text-sm text-muted-foreground">
-              {ageRange[0]} - {ageRange[1]} years
+              {ageRange[0]} - {ageRange[1]} років
             </span>
           </div>
           <Slider
@@ -119,30 +112,28 @@ const PetFilters = () => {
           />
         </div>
 
-        {/* Health Status */}
         <div className="space-y-2">
-          <Label htmlFor="health">Health Status</Label>
+          <Label htmlFor="health">Стан здоров&apos;я</Label>
           <Select
             value={healthStatus ?? ""}
-            onValueChange={(value) => setHealthStatus(value)}
+            onValueChange={handleHealthStatusChange}
           >
             <SelectTrigger id="health">
-              <SelectValue placeholder="Select status" />
+              <SelectValue placeholder="Виберіть стан" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="any">Any Status</SelectItem>
-              <SelectItem value={HealthStatus.HEALTHY}>Healthy</SelectItem>
-              <SelectItem value={HealthStatus.SICK}>Sick</SelectItem>
-              <SelectItem value={HealthStatus.RECOVERING}>
-                Recovering
-              </SelectItem>
+              <SelectItem value="any">Будь-який стан</SelectItem>
+              {Object.entries(PET_HEALTH_STATUS_MAPPER).map(([key, value]) => (
+                <SelectItem key={key} value={key}>
+                  {value}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Reset Button */}
         <Button variant="outline" className="w-full" onClick={resetFilters}>
-          Reset Filters
+          Скинути фільтри
         </Button>
       </CardContent>
     </Card>

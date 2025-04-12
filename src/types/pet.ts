@@ -22,10 +22,11 @@ export interface Pet {
   name: string | null;
   type: PetType;
   breed: string | null;
-  age: number | null;
+  age: number;
   address: string | null;
   imageLink: string | null;
   description: string | null;
+  shelter?: string | null;
   heathStatus: PetHealthType;
 }
 export interface PetRequest {

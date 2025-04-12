@@ -5,7 +5,7 @@ import { Info, Loader2, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-import { deletePetById, getAllPets, getPetById } from "@/api/pets/pets-api";
+import { deletePetById, getAllPets, getPetById } from "@/api/pets/pets.api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,7 @@ import {
   formatPetType,
   getHealthStatusColor,
 } from "@/utils/shelter-pets-utils";
+import { cn } from "@/utils/styles-utils";
 
 import EditPetDialog from "./edit-pet-dialog";
 import PetDetailsDialog from "./pet-details-dialog";
@@ -113,7 +114,10 @@ const ShelterPets = () => {
                   className="object-cover"
                 />
                 <Badge
-                  className={`absolute right-2 top-2 ${getHealthStatusColor(pet.heathStatus)}`}
+                  className={cn(
+                    "absolute right-2 top-2",
+                    getHealthStatusColor(pet.heathStatus),
+                  )}
                 >
                   {formatHealthStatus(pet.heathStatus)}
                 </Badge>
@@ -170,7 +174,7 @@ const ShelterPets = () => {
                     }
                   >
                     {deleteMutation.isPending &&
-                    deleteMutation.variables === pet.id ? (
+                      deleteMutation.variables === pet.id ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       <Trash2 className="mr-2 h-4 w-4" />

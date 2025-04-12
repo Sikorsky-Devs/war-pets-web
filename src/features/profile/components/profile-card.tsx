@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
+import ProfileCardSkeleton from "@/features/profile/components/profile-card-skeleton";
 import UpdateProfileModal from "@/features/profile/components/update-profile-modal";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
@@ -23,7 +24,11 @@ const ProfileCard = () => {
     user: { id },
   } = useAuthStore();
 
-  const { user } = useUserQuery(id);
+  const { user, isPending } = useUserQuery(id);
+
+  if (isPending) {
+    return <ProfileCardSkeleton />;
+  }
 
   const accountType = getAccountType(user?.accountType);
   const fullName = getFullName(
@@ -76,7 +81,9 @@ const ProfileCard = () => {
             );
           })}
         </div>
-        <div className="flex w-full gap-2">
+        <div className="flex w-full gap-2 flex-wrap">
+
+          <UpdateProfileModal />
           <Button
             icon={<LogOutIcon />}
             className="w-full"
@@ -85,7 +92,6 @@ const ProfileCard = () => {
           >
             Вийти
           </Button>
-          <UpdateProfileModal />
         </div>
       </CardContent>
     </Card>
