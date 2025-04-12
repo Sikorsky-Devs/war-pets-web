@@ -143,7 +143,6 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-6">
-      {/* Profile Image Upload - At the top */}
       <div className="mb-6 flex flex-col items-center space-y-4">
         <Label
           htmlFor="profileImage"
@@ -152,7 +151,6 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
           Фото профілю
         </Label>
         <div className="flex flex-col items-center gap-4">
-          {/* Clickable Image Area */}
           <div
             onClick={triggerFileInput}
             className="group relative cursor-pointer"

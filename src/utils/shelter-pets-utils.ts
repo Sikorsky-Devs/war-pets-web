@@ -3,57 +3,57 @@ import { type PetHealthType, type PetType } from "@/types/pet";
 export const formatPetType = (type: PetType) => {
   switch (type) {
     case "DOG":
-      return "Собака"
+      return "Собака";
     case "CAT":
-      return "Кіт"
+      return "Кіт";
     case "BIRD":
-      return "Птах"
+      return "Птах";
     case "FISH":
-      return "Риба"
+      return "Риба";
     case "DOMESTIC":
-      return "Домашня тварина"
+      return "Домашня тварина";
     case "EXOTIC":
-      return "Екзотична тварина"
+      return "Екзотична тварина";
     case "OTHER":
-      return "Інше"
+      return "Інше";
     default:
-      return type
+      return type;
   }
-}
+};
 
 export const getHealthStatusColor = (status: PetHealthType): string => {
   switch (status) {
     case "HEALTHY":
-      return "bg-green-500 hover:bg-green-600"
+      return "bg-green-500 text-black hover:bg-green-600";
     case "UNDER_TREATMENT":
-      return "bg-amber-500 hover:bg-amber-600"
+      return "bg-amber-500 hover:bg-amber-600";
     case "INJURED":
     case "SICK":
-      return "bg-orange-500 hover:bg-orange-600"
+      return "bg-orange-500 hover:bg-orange-600";
     case "DISABLED":
-      return "bg-purple-500 hover:bg-purple-600"
+      return "bg-purple-500 hover:bg-purple-600";
     case "CRITICAL":
-      return "bg-red-500 hover:bg-red-600"
+      return "bg-red-500 hover:bg-red-600";
     default:
-      return "bg-slate-500 hover:bg-slate-600"
+      return "bg-slate-500 hover:bg-slate-600";
   }
-}
+};
 
 export const formatHealthStatus = (status: PetHealthType): string => {
   switch (status) {
     case "HEALTHY":
-      return "Здоровий"
+      return "Здоровий";
     case "INJURED":
-      return "Травмований"
+      return "Травмований";
     case "SICK":
-      return "Хворий"
+      return "Хворий";
     case "UNDER_TREATMENT":
-      return "На лікуванні"
+      return "На лікуванні";
     case "DISABLED":
-      return "З інвалідністю"
+      return "З інвалідністю";
     case "CRITICAL":
-      return "Критичний стан"
+      return "Критичний стан";
     default:
-      return "Стан невідомий"
+      return "Стан невідомий";
   }
-}
+};

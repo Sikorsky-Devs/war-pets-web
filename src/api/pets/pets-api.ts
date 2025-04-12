@@ -14,7 +14,6 @@ export const addPet = async (
   },
 ) => {
   try {
-    console.log(data);
     const response = await fetch(`${API_URL}/pets`, {
       method: "POST",
       headers: {
@@ -29,7 +28,7 @@ export const addPet = async (
       throw new Error(error.message);
     }
 
-    return response;
+    return (await response.json()) as Pet;
   } catch (e) {
     throw e;
   }
@@ -121,6 +120,25 @@ export const getAllPets = async (params?: string) => {
       top: PetResponse[];
       common: PetResponse[];
     };
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const updatePetImage = async (formData: FormData, id: string) => {
+  try {
+    const response = await fetch(`${API_URL}/pets/${id}/images`, {
+      method: "PATCH",
+      headers: {
+        ...generateAuthHeaders(),
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json();
+      throw new Error(error.message);
+    }
   } catch (e) {
     throw e;
   }
