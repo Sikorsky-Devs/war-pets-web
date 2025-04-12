@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
 import PetFilters from "@/features/adverts/component/pet-filters";
+import PetSearchModal from "@/features/adverts/component/pet-seatch-modal";
 import useDebounce from "@/hooks/use-debounce";
 import { type PetResponse } from "@/types/pet";
 
@@ -59,9 +60,9 @@ const PetsPage = () => {
   });
 
   const isSavedPet = (id: string) => {
-    const savedPetIds = savedPets?.map(pet => pet.id);
+    const savedPetIds = savedPets?.map((pet) => pet.id);
     return savedPetIds?.includes(id);
-  }
+  };
 
   const skeletonCards = Array(ITEMS_PER_PAGE)
     .fill(0)
@@ -98,9 +99,7 @@ const PetsPage = () => {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {currentPets?.map((pet: PetResponse) => {
                   const isSaved = isSavedPet(pet.id);
-                  return (
-                    <PetCard key={pet.id} pet={pet} isSaved={isSaved} />
-                  )
+                  return <PetCard key={pet.id} pet={pet} isSaved={isSaved} />;
                 })}
               </div>
 
@@ -116,16 +115,20 @@ const PetsPage = () => {
                   </Button>
 
                   <div className="flex items-center gap-1">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                      <Button
-                        key={pageNum}
-                        variant={pageNum === currentPage ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => setPage(String(pageNum))}
-                      >
-                        {pageNum}
-                      </Button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (pageNum) => (
+                        <Button
+                          key={pageNum}
+                          variant={
+                            pageNum === currentPage ? "default" : "outline"
+                          }
+                          size="icon"
+                          onClick={() => setPage(String(pageNum))}
+                        >
+                          {pageNum}
+                        </Button>
+                      ),
+                    )}
                   </div>
 
                   <Button

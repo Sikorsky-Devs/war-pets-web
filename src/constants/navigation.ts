@@ -5,11 +5,9 @@ export enum Routes {
   SignUp = "/auth/sign-up",
   SignIn = "/auth/sign-in",
   AuthSuccess = "/auth/success",
+  Adverts = "/adverts",
 }
 
 export const navigation = [
-  { href: "#features", label: "Можливості" },
-  { href: "#how-it-works", label: "Як це працює" },
-  { href: "#shelters", label: "Притулки" },
-  { href: "#stories", label: "Історії успіху" },
+  { href: Routes.Adverts, label: "Оголошення" },
 ];

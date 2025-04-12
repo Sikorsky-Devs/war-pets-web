@@ -1,10 +1,11 @@
+import { type CreateSearchRequestBody } from "@/api/pets/pets.dto";
 import { API_URL } from "@/constants/global";
 import {
   type AddPetFormData,
   type EditPetFormData,
 } from "@/features/shelter-profile/types/shelter-profile-types";
 import type { ErrorResponse } from "@/types/api";
-import { type Pet, type PetResponse } from "@/types/pet";
+import { type Pet, type PetResponse, type PetSearchRequest } from "@/types/pet";
 import { generateAuthHeaders } from "@/utils/auth-utils";
 
 export const addPet = async (
@@ -158,8 +159,8 @@ export const getSavedPets = async () => {
       throw new Error(error.message);
     }
 
-    const data = await response.json() as { pet: Pet }[];
-    return data.map(info => info.pet);
+    const data = (await response.json()) as { pet: Pet }[];
+    return data.map((info) => info.pet);
   } catch (error) {
     throw error;
   }
@@ -200,5 +201,71 @@ export const unsavePet = async (petId: string) => {
     }
   } catch (error) {
     throw error;
+  }
+};
+
+export const createSearchRequest = async (
+  searchRequest: CreateSearchRequestBody,
+) => {
+  try {
+    const response = await fetch(`${API_URL}/requests`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+      body: JSON.stringify(searchRequest),
+    });
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json();
+      throw new Error(error.message);
+    }
+
+    return (await response.json()) as Pet[];
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const getSearchRequests = async () => {
+  try {
+    const response = await fetch(`${API_URL}/requests`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json();
+      throw new Error(error.message);
+    }
+
+    return (await response.json()) as PetSearchRequest[];
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const getSearchRequest = async (id: string) => {
+  try {
+    const response = await fetch(`${API_URL}/requests/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json();
+      throw new Error(error.message);
+    }
+
+    return (await response.json()) as PetSearchRequest[];
+  } catch (e) {
+    throw e;
   }
 };

@@ -3,38 +3,47 @@ import { type PermissionsByResource } from "@/permissions/types";
 export const RESOURCES: PermissionsByResource = {
   comments: {
     GUEST: {
-      view: (user, comment) => comment.authorId !== user.id,
+      view: false,
       create: false,
     },
     VOLUNTEER: {
       view: true,
       create: true,
-      update: (user, comment) => comment.authorId === user.id,
     },
     SHELTER: {
-      view: true,
-      create: true,
-      update: () => true,
+      view: false,
+      create: false,
     },
   },
-  todos: {
+  save: {
     GUEST: {
-      view: () => false,
+      view: false,
+      create: false,
+      delete: false,
     },
     VOLUNTEER: {
       view: true,
       create: true,
-      update: (user, todo) =>
-        todo.userId === user.id || todo.invitedUsers.includes(user.id),
-      delete: (user, todo) =>
-        (todo.userId === user.id || todo.invitedUsers.includes(user.id)) &&
-        todo.completed,
+      delete: true,
     },
     SHELTER: {
+      view: false,
+      create: false,
+      delete: false,
+    },
+  },
+  searchRequests: {
+    GUEST: {
+      view: false,
+      create: false,
+    },
+    VOLUNTEER: {
       view: true,
       create: true,
-      update: true,
-      delete: true,
+    },
+    SHELTER: {
+      view: false,
+      create: false,
     },
   },
 };

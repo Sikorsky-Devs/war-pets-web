@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { hasPermission } from "@/permissions";
 import { getPetAge } from "@/utils/pet-utils";
 import { cn } from "@/utils/styles-utils";
 
@@ -30,6 +31,8 @@ const PetDetailsModal = memo(
   ({ petId, isSaved = false }: PetDetailsModalProps) => {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
+
+    const canSave = hasPermission("save", "create");
 
     const { data: pet, isLoading } = useQuery({
       queryKey: ["pet", petId],
@@ -74,16 +77,18 @@ const PetDetailsModal = memo(
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
               <span>{pet?.name}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleSave()}
-                disabled={isSaving}
-              >
-                <Heart
-                  className={`h-5 w-5 ${isSaved ? "fill-red-500 text-red-500" : ""}`}
-                />
-              </Button>
+              {canSave && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleSave()}
+                  disabled={isSaving}
+                >
+                  <Heart
+                    className={`h-5 w-5 ${isSaved ? "fill-red-500 text-red-500" : ""}`}
+                  />
+                </Button>
+              )}
             </DialogTitle>
           </DialogHeader>
 

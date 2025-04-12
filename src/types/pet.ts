@@ -50,15 +50,18 @@ export interface PetResponse {
 
 export interface PetSearchRequest {
   id: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  requestDate: string;
-  type: PetType | null;
-  breed: string | null;
+  volunteerId: string;
+  petType: PetType | null;
   ageFrom: number | null;
   ageTo: number | null;
   address: string | null;
+  breed: string | null;
   healthStatus: PetHealthType | null;
-  comment: string | null;
+  createdAt: string;
+  volunteer: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    middleName: string | null;
+  };
 }

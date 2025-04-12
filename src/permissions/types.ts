@@ -1,30 +1,18 @@
+import { type Comment } from "@/types/comment";
 import { type AccountType, type User } from "@/types/user";
 
-type Comment = {
-  id: string;
-  body: string;
-  authorId: string;
-  createdAt: Date;
-};
-
-type Todo = {
-  id: string;
-  title: string;
-  userId: string;
-  completed: boolean;
-  invitedUsers: string[];
-};
-
 export type Permissions = {
-  // Example of how to define permissions for different resources
   comments: {
     dataType: Comment;
-    action: "view" | "create" | "update";
+    action: "view" | "create";
   };
-  todos: {
-    // Can do something like Pick<Todo, "userId"> to get just the rows you use
-    dataType: Todo;
-    action: "view" | "create" | "update" | "delete";
+  save: {
+    dataType: string;
+    action: "view" | "create" | "delete";
+  };
+  searchRequests: {
+    dataType: string;
+    action: "view" | "create";
   };
 };
 

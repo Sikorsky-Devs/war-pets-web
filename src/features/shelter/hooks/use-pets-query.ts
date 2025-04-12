@@ -8,7 +8,7 @@ const usePetsQuery = (id: string) => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["pets"],
+    queryKey: ["pets", id],
     queryFn: async () => {
       const resultPets = await getAllPets();
       const fullPets = await Promise.all(
