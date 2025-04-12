@@ -1,13 +1,18 @@
 import { API_URL } from "@/constants/global";
-import {type AddPetFormData, EditPetFormData} from "@/features/shelter-profile/types/shelter-profile-types";
+import {
+  type AddPetFormData,
+  type EditPetFormData,
+} from "@/features/shelter-profile/types/shelter-profile-types";
 import type { ErrorResponse } from "@/types/api";
-import { type Pet } from "@/types/pet";
+import { type Pet, type PetResponse } from "@/types/pet";
 import { generateAuthHeaders } from "@/utils/auth-utils";
 
-export const addPet = async (data: AddPetFormData & {
-  shelterId:string,
-  isApproved: boolean,
-}) => {
+export const addPet = async (
+  data: AddPetFormData & {
+    shelterId: string;
+    isApproved: boolean;
+  },
+) => {
   try {
     console.log(data);
     const response = await fetch(`${API_URL}/pets`, {
@@ -50,9 +55,12 @@ export const getPetById = async (petId: string) => {
   }
 };
 
-export const editPetById = async (petId: string, data: EditPetFormData & {
-  isApproved: boolean,
-}) => {
+export const editPetById = async (
+  petId: string,
+  data: EditPetFormData & {
+    isApproved: boolean;
+  },
+) => {
   try {
     const response = await fetch(`${API_URL}/pets/${petId}`, {
       method: "PATCH",
@@ -95,9 +103,9 @@ export const deletePetById = async (petId: string) => {
   }
 };
 
-export const getAllPets = async () => {
+export const getAllPets = async (params?: string) => {
   try {
-    const response = await fetch(`${API_URL}/pets`, {
+    const response = await fetch(`${API_URL}/pets?${params}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -110,8 +118,8 @@ export const getAllPets = async () => {
     }
 
     return (await response.json()) as {
-      top: Pet[];
-      common: Pet[]
+      top: PetResponse[];
+      common: PetResponse[];
     };
   } catch (e) {
     throw e;
