@@ -1,5 +1,6 @@
 import { useParams } from "next/navigation";
 
+import { Card, CardContent } from "@/components/ui/card";
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
 import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
@@ -19,6 +20,19 @@ const ShelterPetsList = () => {
           ))}
       </div>
     );
+  }
+
+  if (!pets?.length) {
+    return (
+      <Card>
+        <CardContent className="py-6 text-center text-muted-foreground">
+          <p className="text-lg font-medium">Притулок не має тварин</p>
+          <p className="text-sm text-muted-foreground">
+            Будь ласка, додайте першу тваринку
+          </p>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (

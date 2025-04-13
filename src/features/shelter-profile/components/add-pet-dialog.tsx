@@ -1,9 +1,7 @@
 "use client";
 
-import { EditIcon, PlusCircle } from "lucide-react";
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import AddPetForm from "@/features/shelter-profile/components/add-pet-form";
 
-const AddPetDialog = () => {
+const AddPetDialog = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -24,14 +22,7 @@ const AddPetDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          icon={<PlusCircle className="h-4 w-4" />}
-          size="sm"
-          onClick={() => setOpen(true)}
-          className="gap-1"
-        >
-          Додати тварину
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>

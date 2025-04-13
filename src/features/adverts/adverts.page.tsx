@@ -9,9 +9,8 @@ import { Button } from "@/components/ui/button";
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
 import PetFilters from "@/features/adverts/component/pet-filters";
-import PetSearchModal from "@/features/adverts/component/pet-seatch-modal";
 import useDebounce from "@/hooks/use-debounce";
-import { type PetResponse } from "@/types/pet";
+import { PetResponse } from "@/types/pet";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -49,8 +48,11 @@ const PetsPage = () => {
       if (ageTo) params.append("ageTo", String(ageTo));
       if (healthStatus) params.append("healthStatus", healthStatus);
 
-      const response = await getAllPets(params);
-      return response.common;
+      const { top, common } = await getAllPets(params);
+
+      const filteredPets = [...top, ...common].filter((pet) => pet.isApproved);
+
+      return filteredPets;
     },
   });
 
@@ -68,7 +70,6 @@ const PetsPage = () => {
     .fill(0)
     .map((_, index) => <PetCardSkeleton key={`skeleton-${index}`} />);
 
-  // Calculate pagination
   const totalItems = pets?.length ?? 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

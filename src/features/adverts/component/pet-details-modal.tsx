@@ -1,15 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Heart, Info, InfoIcon, MapPin, MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { memo, useState } from "react";
 import { toast } from "sonner";
 
-import { getPetById } from "@/api/pets/pets.api";
-import { savePet, unsavePet } from "@/api/pets/pets.api";
+import { getPetById, savePet, unsavePet } from "@/api/pets/pets.api";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,10 +23,12 @@ import { cn } from "@/utils/styles-utils";
 interface PetDetailsModalProps {
   petId: string;
   isSaved?: boolean;
+  className?: string;
+  isShelter?: boolean;
 }
 
 const PetDetailsModal = memo(
-  ({ petId, isSaved = false }: PetDetailsModalProps) => {
+  ({ petId, isSaved = false, className }: PetDetailsModalProps) => {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
 
@@ -69,7 +69,7 @@ const PetDetailsModal = memo(
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button size="sm" variant="outline" icon={<Info />}>
+          <Button className={className} size="sm" variant="outline" icon={<Info />}>
             Детальніше
           </Button>
         </DialogTrigger>

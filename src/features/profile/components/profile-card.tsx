@@ -1,5 +1,5 @@
 "use client";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, LucideLogIn } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type React from "react";
@@ -25,6 +25,8 @@ const ProfileCard = () => {
   } = useAuthStore();
 
   const { user, isPending } = useUserQuery(id);
+
+  console.log(user);
 
   if (isPending) {
     return <ProfileCardSkeleton />;

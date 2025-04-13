@@ -3,7 +3,6 @@ import { uk } from "date-fns/locale/uk";
 import { Star } from "lucide-react";
 import { useParams } from "next/navigation";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -12,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import UserAvatar from "@/components/user-avatar";
 import useCommentsQuery from "@/features/shelter/hooks/use-comments-query";
+import { hasPermission } from "@/permissions";
 import { getUserName } from "@/utils/user-utils";
 
 const CommentsList = () => {
@@ -19,14 +19,18 @@ const CommentsList = () => {
 
   const { comments } = useCommentsQuery(id as string);
 
+  const canComment = hasPermission("comments", 'create');
+
   if (comments.length === 0) {
     return (
       <Card>
         <CardContent className="py-6 text-center text-muted-foreground">
           <p className="text-lg font-medium">Відгуків поки що немає</p>
-          <p className="text-sm text-muted-foreground">
-            Будьте першим, хто залишить відгук
-          </p>
+          {canComment && (
+            <p className="text-sm text-muted-foreground">
+              Будьте першим, хто залишить відгук
+            </p>
+          )}
         </CardContent>
       </Card>
     );
@@ -54,11 +58,10 @@ const CommentsList = () => {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-4 w-4 ${
-                        i < comment.stars
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300"
-                      }`}
+                      className={`h-4 w-4 ${i < comment.stars
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-gray-300"
+                        }`}
                     />
                   ))}
                 </div>

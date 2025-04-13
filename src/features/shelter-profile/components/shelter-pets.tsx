@@ -1,11 +1,12 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Info, Loader2, Pencil, Trash2 } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "sonner";
 
-import { deletePetById, getAllPets, getPetById } from "@/api/pets/pets.api";
+import { deletePetById } from "@/api/pets/pets.api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import {
 } from "@/utils/shelter-pets-utils";
 import { cn } from "@/utils/styles-utils";
 
+import PetDetailsModal from "@/features/adverts/component/pet-details-modal";
 import EditPetDialog from "./edit-pet-dialog";
 import PetDetailsDialog from "./pet-details-dialog";
 
@@ -45,6 +47,9 @@ const ShelterPets = () => {
       queryClient.setQueryData(["pets"], (oldData: Pet[] | undefined) =>
         oldData ? oldData.filter((pet) => pet.id !== petId) : [],
       );
+    },
+    onError: () => {
+      toast.error("Помилка при видаленні тварини");
     },
   });
 
@@ -141,15 +146,7 @@ const ShelterPets = () => {
               </CardContent>
 
               <CardFooter className="flex flex-col gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => handleViewDetailsClick(pet)}
-                >
-                  <Info className="mr-2 h-4 w-4" />
-                  Деталі
-                </Button>
+                <PetDetailsModal petId={pet.id} className=" w-full" />
                 <div className="flex w-full flex-wrap gap-2">
                   <Button
                     className="flex-1"
@@ -171,7 +168,7 @@ const ShelterPets = () => {
                     }
                   >
                     {deleteMutation.isPending &&
-                    deleteMutation.variables === pet.id ? (
+                      deleteMutation.variables === pet.id ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       <Trash2 className="mr-2 h-4 w-4" />

@@ -105,7 +105,8 @@ export const deletePetById = async (petId: string) => {
 
 export const getAllPets = async (params?: URLSearchParams) => {
   try {
-    const response = await fetch(`${API_URL}/pets?${params?.toString()}`, {
+    const searchParams = `${params?.toString() ?? ""}`
+    const response = await fetch(`${API_URL}/pets?${searchParams}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

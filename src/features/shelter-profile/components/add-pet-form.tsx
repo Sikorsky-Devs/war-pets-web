@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { Camera, Upload, X } from "lucide-react";
+import { Camera, X } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,6 +26,8 @@ import {
 } from "@/features/shelter-profile/types/shelter-profile-types";
 import useAuthStore from "@/store/use-auth-store";
 import type { PetHealthType, PetType } from "@/types/pet";
+import { isShelter } from "@/utils/auth-utils";
+import { useParams } from "next/navigation";
 
 type AddPetFormProps = {
   onClose: () => void;
@@ -37,6 +39,8 @@ const AddPetForm = ({ onClose }: AddPetFormProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const isUserShelter = isShelter(shelter.accountType);
 
   const {
     register,
@@ -78,23 +82,25 @@ const AddPetForm = ({ onClose }: AddPetFormProps) => {
   };
 
   const onSubmit = async (data: AddPetFormData) => {
+    if (!id) return;
     try {
       if (!selectedImage) {
         toast.error("Будь ласка, виберіть фото тварини");
         return;
       }
-      const { id } = await addPet({
+
+      const { id: petId } = await addPet({
         ...data,
-        shelterId: shelter.id,
-        isApproved: true,
+        shelterId: isUserShelter ? shelter.id : id,
+        isApproved: isUserShelter,
       });
-      await handleImageUpload(id);
-      toast.success("Тварину додано до притулку");
+      await handleImageUpload(petId);
+      toast.success(isUserShelter ? "Тварину додано до притулку" : "Запит успішно відправлено");
       await queryClient.invalidateQueries({ queryKey: ["pets"] });
       onClose();
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
-      console.error(e);
+      toast.error("Трапилась помилка");
     }
   };
 
@@ -270,7 +276,7 @@ const AddPetForm = ({ onClose }: AddPetFormProps) => {
           type="submit"
           onClick={handleSubmit(onSubmit)}
         >
-          Додати тварину
+          {isUserShelter ? "Додати тварину" : "Відправити запит"}
         </Button>
       </div>
     </div>

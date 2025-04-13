@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getAllPets, getPetById } from "@/api/pets/pets.api";
+import { getAllPets } from "@/api/pets/pets.api";
 
 const usePetsQuery = (id: string) => {
   const {
@@ -10,11 +10,9 @@ const usePetsQuery = (id: string) => {
   } = useQuery({
     queryKey: ["pets", id],
     queryFn: async () => {
-      const resultPets = await getAllPets();
-      const fullPets = await Promise.all(
-        resultPets.common.map((pet) => getPetById(pet.id)),
-      );
-      return fullPets.filter((pet) => pet.shelterId === id);
+      const { top, common } = await getAllPets();
+      const pets = [...top, ...common];
+      return pets.filter((pet) => pet.shelterId === id);
     },
   });
 

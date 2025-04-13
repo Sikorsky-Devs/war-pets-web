@@ -46,6 +46,13 @@ export interface PetResponse {
   address: string | null;
   imageLink: string | null;
   shelter: string | null;
+  shelterId: string;
+  isApproved: boolean;
+  type: PetType;
+  breed: string | null;
+  description: string | null;
+  heathStatus: PetHealthType;
+  createdAt: string;
 }
 
 export interface PetSearchRequest {
