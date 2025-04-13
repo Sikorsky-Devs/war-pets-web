@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Routes } from "@/constants/navigation";
 import { hasPermission } from "@/permissions";
 import { getPetAge } from "@/utils/pet-utils";
 import { cn } from "@/utils/styles-utils";
@@ -39,6 +40,8 @@ const PetDetailsModal = memo(
       queryFn: () => getPetById(petId),
       enabled: open,
     });
+
+    const shelterHref = Routes.Shelter.replace("[id]", pet?.shelterId ?? "");
 
     const { mutate: handleSave, isPending: isSaving } = useMutation({
       mutationFn: async () => {
@@ -69,7 +72,12 @@ const PetDetailsModal = memo(
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className={className} size="sm" variant="outline" icon={<Info />}>
+          <Button
+            className={className}
+            size="sm"
+            variant="outline"
+            icon={<Info />}
+          >
             Детальніше
           </Button>
         </DialogTrigger>
@@ -152,7 +160,7 @@ const PetDetailsModal = memo(
                       }),
                       "gap-2",
                     )}
-                    href={`/shelter/${pet.shelterId}`}
+                    href={shelterHref}
                   >
                     <InfoIcon className="size-4" />
                     <span>Детальніше про притулок</span>

@@ -43,3 +43,24 @@ export const updateUser = async (data: UserUpdateDto, id: string) => {
     throw e;
   }
 };
+
+export const getShelters = async () => {
+  try {
+    const response = await fetch(`${API_URL}/users/shelters`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const error = (await response.json()) as ErrorResponse;
+      throw new Error(error.message);
+    }
+
+    return (await response.json()) as ShelterUser[];
+  } catch (e) {
+    throw e;
+  }
+}
