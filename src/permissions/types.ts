@@ -1,4 +1,5 @@
 import { type Comment } from "@/types/comment";
+import { type Post } from "@/types/post";
 import { type AccountType, type User } from "@/types/user";
 
 export type Permissions = {
@@ -12,6 +13,10 @@ export type Permissions = {
   };
   searchRequests: {
     dataType: string;
+    action: "view" | "create";
+  };
+  posts: {
+    dataType: Post;
     action: "view" | "create";
   };
 };

@@ -8,9 +8,11 @@ export enum Routes {
   Adverts = "/adverts",
   Shelters = "/shelters",
   Shelter = "/shelters/[id]",
+  Posts = "/posts",
 }
 
 export const navigation = [
+  { href: Routes.Posts, label: "Pet Stories" },
   { href: Routes.Adverts, label: "Оголошення" },
   { href: Routes.Shelters, label: "Притулки" },
 ];

@@ -46,4 +46,18 @@ export const RESOURCES: PermissionsByResource = {
       create: false,
     },
   },
+  posts: {
+    GUEST: {
+      view: true,
+      create: false,
+    },
+    VOLUNTEER: {
+      view: true,
+      create: true,
+    },
+    SHELTER: {
+      view: true,
+      create: true,
+    },
+  },
 };
