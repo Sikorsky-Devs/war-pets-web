@@ -51,7 +51,7 @@ export interface PetResponse {
   type: PetType;
   breed: string | null;
   description: string | null;
-  heathStatus: PetHealthType;
+  healthStatus: PetHealthType;
   createdAt: string;
 }
 

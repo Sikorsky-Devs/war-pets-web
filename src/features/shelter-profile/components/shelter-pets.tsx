@@ -3,7 +3,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import { toast } from "sonner";
 
 import { deletePetById } from "@/api/pets/pets.api";
@@ -16,6 +15,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import PetDetailsModal from "@/features/adverts/component/pet-details-modal";
 import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
 import useAuthStore from "@/store/use-auth-store";
 import type { Pet } from "@/types/pet";
@@ -26,17 +26,10 @@ import {
 } from "@/utils/shelter-pets-utils";
 import { cn } from "@/utils/styles-utils";
 
-import PetDetailsModal from "@/features/adverts/component/pet-details-modal";
 import EditPetDialog from "./edit-pet-dialog";
-import PetDetailsDialog from "./pet-details-dialog";
 
 const ShelterPets = () => {
   const { user } = useAuthStore();
-  const [editingPet, setEditingPet] = useState<Pet | null>(null);
-  const [viewingPet, setViewingPet] = useState<Pet | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-
   const queryClient = useQueryClient();
 
   const { pets, isLoading } = usePetsQuery(user.id);
@@ -52,16 +45,6 @@ const ShelterPets = () => {
       toast.error("Помилка при видаленні тварини");
     },
   });
-
-  const handleEditClick = (pet: Pet) => {
-    setEditingPet(pet);
-    setIsEditDialogOpen(true);
-  };
-
-  const handleViewDetailsClick = (pet: Pet) => {
-    setViewingPet(pet);
-    setIsDetailsDialogOpen(true);
-  };
 
   const handleDeletePet = (petId: string) => {
     deleteMutation.mutate(petId);
@@ -118,10 +101,10 @@ const ShelterPets = () => {
                 <Badge
                   className={cn(
                     "absolute right-2 top-2",
-                    getHealthStatusColor(pet.heathStatus),
+                    getHealthStatusColor(pet.healthStatus),
                   )}
                 >
-                  {formatHealthStatus(pet.heathStatus)}
+                  {formatHealthStatus(pet.healthStatus)}
                 </Badge>
               </div>
               <CardHeader>
@@ -146,19 +129,15 @@ const ShelterPets = () => {
               </CardContent>
 
               <CardFooter className="flex flex-col gap-2">
-                <PetDetailsModal petId={pet.id} className=" w-full" />
-                <div className="flex w-full flex-wrap gap-2">
+                <PetDetailsModal petId={pet.id} className="w-full" />
+                <div className="grid w-full grid-cols-2 gap-2">
+                  <EditPetDialog pet={pet}>
+                    <Button className="w-full" variant="outline" size="sm">
+                      <Pencil className="h-4 w-4" />
+                      Редагувати
+                    </Button>
+                  </EditPetDialog>
                   <Button
-                    className="flex-1"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEditClick(pet)}
-                  >
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Редагувати
-                  </Button>
-                  <Button
-                    className="flex-1"
                     variant="destructive"
                     size="sm"
                     onClick={() => handleDeletePet(pet.id)}
@@ -169,9 +148,9 @@ const ShelterPets = () => {
                   >
                     {deleteMutation.isPending &&
                       deleteMutation.variables === pet.id ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <Trash2 className="mr-2 h-4 w-4" />
+                      <Trash2 className="h-4 w-4" />
                     )}
                     Видалити
                   </Button>
@@ -181,18 +160,6 @@ const ShelterPets = () => {
           ))}
         </div>
       )}
-
-      <EditPetDialog
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-        pet={editingPet}
-      />
-
-      <PetDetailsDialog
-        open={isDetailsDialogOpen}
-        onOpenChange={setIsDetailsDialogOpen}
-        pet={viewingPet}
-      />
     </div>
   );
 };

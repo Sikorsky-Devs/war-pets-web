@@ -1,18 +1,13 @@
 "use client"
 
-import { useState } from "react"
 
-import { type Pet } from "@/types/pet"
 
 import PetRequest from "@/features/shelter-profile/components/pet-request"
 import usePetsQuery from "@/features/shelter/hooks/use-pets-query"
 import useAuthStore from "@/store/use-auth-store"
-import PetDetailsDialog from "./pet-details-dialog"
 
 const PetRequests = () => {
   const { user: { id } } = useAuthStore();
-  const [viewingPet, setViewingPet] = useState<Pet | null>(null)
-  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
 
   const { pets = [], isLoading } = usePetsQuery(id);
 
@@ -31,8 +26,6 @@ const PetRequests = () => {
           ))}
         </div>
       )}
-
-      <PetDetailsDialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen} pet={viewingPet} />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { type PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -11,9 +11,9 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,47 +25,59 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { PET_HEALTH_STATUS_MAPPER, PET_TYPE_MAPPER } from "@/constants/mappers";
 import {
-  type AddPetFormData,
   type EditPetFormData,
   editPetSchema,
 } from "@/features/shelter-profile/types/shelter-profile-types";
 import { queryClient } from "@/providers/query-provider";
-import type { Pet, PetHealthType, PetType } from "@/types/pet";
+import useAuthStore from "@/store/use-auth-store";
+import type { PetHealthType, PetResponse, PetType } from "@/types/pet";
 
-type EditPetDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  pet: Pet | null;
-};
+interface EditPetDialogProps extends PropsWithChildren {
+  pet: PetResponse | null;
+}
 
-const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
+const EditPetDialog = ({ pet, children }: EditPetDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const {
+    user: { id },
+  } = useAuthStore();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
-  } = useForm<EditPetFormData>({ resolver: zodResolver(editPetSchema) });
+  } = useForm<EditPetFormData>({
+    resolver: zodResolver(editPetSchema),
+    defaultValues: {
+      name: pet?.name ?? "",
+      type: pet?.type ?? "OTHER",
+      breed: pet?.breed ?? "",
+      age: pet?.age ?? 0,
+      heathStatus: pet?.healthStatus ?? "HEALTHY",
+      address: pet?.address ?? "",
+      description: pet?.description ?? "",
+    },
+  });
 
-  const onSubmit = async (data: AddPetFormData) => {
+  const onSubmit = async (data: EditPetFormData) => {
+    if (!pet?.id) return;
     try {
-      if (pet) {
-        await editPetById(pet.id, {
-          ...data,
-          isApproved: true,
-        });
+      await editPetById(pet.id, data);
 
-        onOpenChange(false);
-        await queryClient.invalidateQueries({ queryKey: ["pets"] });
-      }
+      setOpen(false);
+      await queryClient.invalidateQueries({ queryKey: ["pets", id] });
+      toast.success("Інформацію про тварину оновлено");
     } catch (e) {
-      if (e instanceof Error) toast.error(e.message);
-      console.error(e);
+      if (e instanceof Error)
+        toast.error("Помилка оновлення інформації про тварину");
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader className="flex flex-col gap-2">
           <DialogTitle>Редагувати інформацію про тварину</DialogTitle>
@@ -88,19 +100,18 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
             <div className="space-y-2">
               <Label htmlFor="petType">Тип тварини</Label>
               <Select
+                defaultValue={pet?.type}
                 onValueChange={(value: PetType) => setValue("type", value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Оберіть тип" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DOG">Собака</SelectItem>
-                  <SelectItem value="CAT">Кіт</SelectItem>
-                  <SelectItem value="BIRD">Птах</SelectItem>
-                  <SelectItem value="FISH">Риба</SelectItem>
-                  <SelectItem value="DOMESTIC">Домашня тварина</SelectItem>
-                  <SelectItem value="EXOTIC">Екзотична тварина</SelectItem>
-                  <SelectItem value="OTHER">Інше</SelectItem>
+                  {Object.entries(PET_TYPE_MAPPER).map(([key, value]) => (
+                    <SelectItem key={key} value={key}>
+                      {value}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {errors.type?.message && (
@@ -130,8 +141,9 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
             />
 
             <div className="space-y-2">
-              <Label htmlFor="healthStatus">Стан здоров&#39;я</Label>
+              <Label htmlFor="heathStatus">Стан здоров&#39;я</Label>
               <Select
+                defaultValue={pet?.healthStatus}
                 onValueChange={(value: PetHealthType) =>
                   setValue("heathStatus", value)
                 }
@@ -140,12 +152,13 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
                   <SelectValue placeholder="Оберіть стан" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="HEALTHY">Здоровий</SelectItem>
-                  <SelectItem value="INJURED">Травмований</SelectItem>
-                  <SelectItem value="SICK">Хворий</SelectItem>
-                  <SelectItem value="UNDER_TREATMENT">На лікуванні</SelectItem>
-                  <SelectItem value="DISABLED">З інвалідністю</SelectItem>
-                  <SelectItem value="CRITICAL">Критичний стан</SelectItem>
+                  {Object.entries(PET_HEALTH_STATUS_MAPPER).map(
+                    ([key, value]) => (
+                      <SelectItem key={key} value={key}>
+                        {value}
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
               {errors.heathStatus?.message && (
@@ -176,16 +189,10 @@ const EditPetDialog = ({ open, onOpenChange, pet }: EditPetDialogProps) => {
               {...register("description")}
             />
           </div>
-        </form>
-        <DialogFooter>
-          <Button
-            type="submit"
-            onClick={handleSubmit(onSubmit)}
-            isLoading={isSubmitting}
-          >
+          <Button type="submit" isLoading={isSubmitting}>
             Зберегти зміни
           </Button>
-        </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

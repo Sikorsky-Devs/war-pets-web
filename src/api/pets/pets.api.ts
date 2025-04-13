@@ -58,7 +58,7 @@ export const getPetById = async (petId: string) => {
 export const editPetById = async (
   petId: string,
   data: EditPetFormData & {
-    isApproved: boolean;
+    isApproved?: boolean;
   },
 ) => {
   try {
@@ -105,7 +105,7 @@ export const deletePetById = async (petId: string) => {
 
 export const getAllPets = async (params?: URLSearchParams) => {
   try {
-    const searchParams = `${params?.toString() ?? ""}`
+    const searchParams = `${params?.toString() ?? ""}`;
     const response = await fetch(`${API_URL}/pets?${searchParams}`, {
       method: "GET",
       headers: {
