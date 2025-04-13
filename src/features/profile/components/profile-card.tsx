@@ -1,5 +1,5 @@
 "use client";
-import { LogOutIcon, LucideLogIn } from "lucide-react";
+import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type React from "react";
@@ -13,7 +13,7 @@ import ProfileCardSkeleton from "@/features/profile/components/profile-card-skel
 import UpdateProfileModal from "@/features/profile/components/update-profile-modal";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
-import { logoutUser, removeAuthToken } from "@/utils/auth-utils";
+import { isShelter, logoutUser, removeAuthToken } from "@/utils/auth-utils";
 import { getAccountType, getFullName } from "@/utils/user-utils";
 
 import { profileData } from "../../../../data/profile-data";
@@ -21,18 +21,17 @@ import { profileData } from "../../../../data/profile-data";
 const ProfileCard = () => {
   const { replace } = useRouter();
   const {
-    user: { id },
+    user: { id, accountType },
   } = useAuthStore();
 
   const { user, isPending } = useUserQuery(id);
-
-  console.log(user);
 
   if (isPending) {
     return <ProfileCardSkeleton />;
   }
 
-  const accountType = getAccountType(user?.accountType);
+  const isUserShelter = isShelter(accountType);
+  const accountTypeStr = getAccountType(user?.accountType);
   const fullName = getFullName(
     user?.firstName,
     user?.lastName,
@@ -49,13 +48,14 @@ const ProfileCard = () => {
     <Card>
       <CardContent className="space-y-4 pt-6">
         <div className="relative">
-          <Badge className="absolute -left-2 -top-2">{accountType}</Badge>
+          <Badge className="absolute -left-2 -top-2">{accountTypeStr}</Badge>
           <div className="flex flex-col items-center">
             <div>
               <UserAvatar
                 size={24}
                 image={user?.avatarLink}
                 className="h-24 w-24"
+                isShelter={isUserShelter}
               />
             </div>
             <h1 className="text-2xl font-bold">{fullName}</h1>

@@ -1,13 +1,17 @@
 "use client";
 
-import { Star } from "lucide-react";
-import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import UserAvatar from "@/components/user-avatar";
+import { Routes } from "@/constants/navigation";
+import useSheltersQuery from "@/features/shelters/hooks/use-shelters-query";
+import Link from "next/link";
 
 const sheltersCount = 8;
 
 const Shelters = () => {
+  const { shelters } = useSheltersQuery(sheltersCount)
+
   return (
     <section id="shelters" className="w-full py-12 md:py-24 lg:py-32">
       <div className="mx-auto max-w-screen-xl px-4 py-4 sm:px-6 lg:px-8">
@@ -23,31 +27,16 @@ const Shelters = () => {
         </div>
 
         <div className="mx-auto mt-16 grid max-w-5xl grid-cols-2 gap-8 md:grid-cols-4">
-          {Array.from({ length: sheltersCount }).map((_, i) => (
+          {shelters.map((shelter, i) => (
             <div key={i} className="flex flex-col items-center space-y-2">
-              <div className="relative h-24 w-24 overflow-hidden rounded-full">
-                <Image
-                  src={`/placeholder.svg?height=100&width=100&text=Притулок ${i + 1}`}
-                  alt={`Притулок ${i + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <h3 className="text-lg font-medium">Притулок {i + 1}</h3>
-              <div className="flex items-center">
-                {Array.from({ length: 5 }).map((_, star) => (
-                  <Star
-                    key={star}
-                    className={`h-4 w-4 ${star <= 3 ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`}
-                  />
-                ))}
-              </div>
+              <UserAvatar className="size-24" size={24} image={shelter.avatarLink} isShelter />
+              <h3 className="text-lg font-medium">{shelter.name}</h3>
             </div>
           ))}
         </div>
 
         <div className="mt-8 flex justify-center">
-          <Button variant="outline">Переглянути всі притулки</Button>
+          <Link href={Routes.Shelters} className={buttonVariants({ variant: "outline" })}>Переглянути всі притулки</Link>
         </div>
       </div>
     </section>

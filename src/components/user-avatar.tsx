@@ -1,4 +1,4 @@
-import { UserRound } from "lucide-react";
+import { Home, UserRound } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -6,14 +6,19 @@ interface UserAvatarProps {
   image?: string | null;
   className?: string;
   size?: number;
+  isShelter?: boolean;
 }
 
-const UserAvatar = ({ image, className, size = 16 }: UserAvatarProps) => {
+const UserAvatar = ({ image, className, size = 16, isShelter }: UserAvatarProps) => {
   return (
     <Avatar className={className}>
       <AvatarImage src={image!} />
       <AvatarFallback>
-        <UserRound size={size} className="opacity-60" aria-hidden="true" />
+        {isShelter ? (
+          <Home size={size} className="text-gray-500" aria-hidden="true" />
+        ) : (
+          <UserRound size={size} className="text-gray-500" aria-hidden="true" />
+        )}
       </AvatarFallback>
     </Avatar>
   );

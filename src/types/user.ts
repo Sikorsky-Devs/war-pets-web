@@ -17,5 +17,5 @@ export interface ShelterUser extends User {
   address: string | null;
   description: string | null;
   donationLink: string | null;
-  stars: string | null;
+  stars: number | null;
 }

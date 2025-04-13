@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
 import useAuthStore from "@/store/use-auth-store";
-import { isGuest } from "@/utils/auth-utils";
+import { isGuest, isShelter } from "@/utils/auth-utils";
 import { cn } from "@/utils/styles-utils";
 import { getAccountType, getUserName } from "@/utils/user-utils";
 
@@ -16,6 +16,7 @@ const UserProfile = () => {
 
   const accountType = getAccountType(user?.accountType);
   const userName = getUserName(user?.name, user?.firstName, user?.lastName);
+  const isUserShelter = isShelter(user?.accountType);
 
   if (isLoading) {
     return (
@@ -33,7 +34,7 @@ const UserProfile = () => {
 
   return (
     <Link
-      href={user.accountType === "SHELTER" ? Routes.ShelterProfile : Routes.Profile}
+      href={isUserShelter ? Routes.ShelterProfile : Routes.Profile}
       className={cn(
         "flex items-center justify-center gap-3 hover:bg-transparent",
       )}
@@ -46,7 +47,7 @@ const UserProfile = () => {
           {accountType}
         </span>
       </div>
-      <UserAvatar />
+      <UserAvatar image={user?.avatarLink} isShelter={isUserShelter} />
     </Link>
   );
 };
