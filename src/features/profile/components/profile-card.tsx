@@ -15,7 +15,6 @@ import {useDeleteContact} from "@/features/profile/hooks/use-delete-contact";
 import {useEditContact} from "@/features/profile/hooks/use-edit-contact";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
-import {Contact} from "@/types/contacts";
 import { isShelter, logoutUser, removeAuthToken } from "@/utils/auth-utils";
 import {contactIconMap} from "@/utils/contacts-utils";
 import { getAccountType, getFullName } from "@/utils/user-utils";
@@ -33,7 +32,6 @@ const ProfileCard = () => {
   const editContactMutation = useEditContact(id);
 
   const [editingContact, setEditingContact] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState<string>("");
 
   if (isLoading) {
     return <ProfileCardSkeleton />;
@@ -55,11 +53,6 @@ const ProfileCard = () => {
     }
   };
 
-  const handleEditStart = (contact: Contact) => {
-    setEditingContact(contact.id);
-    setEditValue(contact.content);
-  };
-
   const handleEditSave = async (contactId: string, editValue: string) => {
     try {
       await editContactMutation.mutateAsync({ contactId, newContent: editValue });
@@ -67,10 +60,6 @@ const ProfileCard = () => {
     } catch (error) {
       console.error("Помилка при оновленні контакту:", error);
     }
-  };
-
-  const handleEditCancel = () => {
-    setEditingContact(null);
   };
 
   const handleSignOut = () => {
@@ -112,7 +101,7 @@ const ProfileCard = () => {
                       onSave={(newContent) =>
                         handleEditSave(item.id, newContent)
                       }
-                      onCancel={handleEditCancel}
+                      onCancel={() => setEditingContact(null)}
                     />
                   ) : (
                     <>
@@ -124,7 +113,7 @@ const ProfileCard = () => {
                         variant="outline"
                         size="icon"
                         className="p-2 h-8 w-8"
-                        onClick={() => handleEditStart(item)}
+                        onClick={() => setEditingContact(item.id)}
                       />
                       <Button
                         icon={<Trash className="h-4 w-4"/>}

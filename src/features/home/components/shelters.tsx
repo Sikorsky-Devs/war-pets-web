@@ -1,6 +1,5 @@
 "use client";
 
-
 import { buttonVariants } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
@@ -10,7 +9,7 @@ import Link from "next/link";
 const sheltersCount = 8;
 
 const Shelters = () => {
-  const { shelters } = useSheltersQuery(sheltersCount)
+  const { shelters } = useSheltersQuery(sheltersCount);
 
   return (
     <section id="shelters" className="w-full py-12 md:py-24 lg:py-32">

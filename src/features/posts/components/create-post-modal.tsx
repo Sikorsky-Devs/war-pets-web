@@ -54,7 +54,7 @@ const CreatePostModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button icon={<PlusIcon />}>Створити</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-6xl">

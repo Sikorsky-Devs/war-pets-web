@@ -1,32 +1,15 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
-
-const storiesData = [
-  {
-    title: "Історія Барсика",
-    description:
-      "Барсик був знайдений на вулиці після обстрілів. Завдяки платформі, він знайшов нову родину, яка його дуже любить. Тепер він щасливий і здоровий!",
-    author: "Олена К.",
-    location: "Київ",
-  },
-  {
-    title: "Історія Мурки",
-    description:
-      "Мурка була знайдена у підвалі зруйнованого будинку. Зараз вона живе у новій родині і має багато іграшок та смаколиків.",
-    author: "Сергій П.",
-    location: "Львів",
-  },
-  {
-    title: "Історія Рекса",
-    description:
-      "Рекс був покинутий господарями під час евакуації. Завдяки нашій платформі, його знайшли волонтери і передали до нової родини.",
-    author: "Марія Т.",
-    location: "Одеса",
-  },
-];
+import {buttonVariants} from "@/components/ui/button";
+import {Routes} from "@/constants/navigation";
+import usePostsQuery from "@/features/posts/hooks/use-posts-query";
 
 const PetStories = () => {
+  const { posts } = usePostsQuery();
+
   return (
     <section
       id="stories"
@@ -48,7 +31,7 @@ const PetStories = () => {
         </div>
 
         <div className="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
-          {storiesData.map((story, index) => (
+          {posts.map((post, index) => (
             <div
               key={index}
               className="flex flex-col space-y-4 rounded-xl border bg-background p-6"
@@ -61,32 +44,16 @@ const PetStories = () => {
                   className="object-cover"
                 />
               </div>
-              <h3 className="text-xl font-bold">{story.title}</h3>
+              <h3 className="text-xl font-bold">{post.title}</h3>
               <p className="text-sm text-muted-foreground">
-                &#34;{story.description}&#34;
+                &#34;{post.content}&#34;
               </p>
-              <div className="flex items-center space-x-2">
-                <div className="relative h-8 w-8 overflow-hidden rounded-full">
-                  <Image
-                    src="/placeholder.svg?height=50&width=50"
-                    alt="Аватар користувача"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">{story.author}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {story.location}
-                  </p>
-                </div>
-              </div>
             </div>
           ))}
         </div>
 
         <div className="mt-8 flex justify-center">
-          <Button variant="outline">Більше історій</Button>
+          <Link href={Routes.Posts} className={buttonVariants({ variant: "outline" })}>Більше історій</Link>
         </div>
       </div>
     </section>
