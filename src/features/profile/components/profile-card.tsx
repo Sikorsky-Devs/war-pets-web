@@ -1,22 +1,26 @@
 "use client";
-import { LogOutIcon } from "lucide-react";
-import Link from "next/link";
+import {LogOutIcon, Pencil, Trash} from "lucide-react";
 import { useRouter } from "next/navigation";
-import type React from "react";
+import React, {useState} from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
+import EditContactInline from "@/features/profile/components/edit-contact-inline";
 import ProfileCardSkeleton from "@/features/profile/components/profile-card-skeleton";
 import UpdateProfileModal from "@/features/profile/components/update-profile-modal";
+import {useDeleteContact} from "@/features/profile/hooks/use-delete-contact";
+import {useEditContact} from "@/features/profile/hooks/use-edit-contact";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
+import {Contact} from "@/types/contacts";
 import { isShelter, logoutUser, removeAuthToken } from "@/utils/auth-utils";
+import {contactIconMap} from "@/utils/contacts-utils";
 import { getAccountType, getFullName } from "@/utils/user-utils";
 
-import { profileData } from "../../../../data/profile-data";
+import AddContactModal from "./add-contact-modal";
 
 const ProfileCard = () => {
   const { replace } = useRouter();
@@ -24,9 +28,14 @@ const ProfileCard = () => {
     user: { id, accountType },
   } = useAuthStore();
 
-  const { user, isPending } = useUserQuery(id);
+  const { user, contacts, isLoading } = useUserQuery(id);
+  const deleteContactMutation = useDeleteContact(id);
+  const editContactMutation = useEditContact(id);
 
-  if (isPending) {
+  const [editingContact, setEditingContact] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState<string>("");
+
+  if (isLoading) {
     return <ProfileCardSkeleton />;
   }
 
@@ -37,6 +46,32 @@ const ProfileCard = () => {
     user?.lastName,
     user?.middleName,
   );
+
+  const handleContactDelete = async (contactId: string) => {
+    try {
+      await deleteContactMutation.mutateAsync(contactId);
+    } catch (error) {
+      console.error("Помилка при видаленні контакту:", error);
+    }
+  };
+
+  const handleEditStart = (contact: Contact) => {
+    setEditingContact(contact.id);
+    setEditValue(contact.content);
+  };
+
+  const handleEditSave = async (contactId: string, editValue: string) => {
+    try {
+      await editContactMutation.mutateAsync({ contactId, newContent: editValue });
+      setEditingContact(null);
+    } catch (error) {
+      console.error("Помилка при оновленні контакту:", error);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditingContact(null);
+  };
 
   const handleSignOut = () => {
     removeAuthToken();
@@ -64,30 +99,56 @@ const ProfileCard = () => {
         </div>
 
         <div className="space-y-2.5">
-          {profileData.contactInfo.map((item, index) => {
-            const Icon = item.icon as React.ElementType;
-            return (
-              <div key={index} className="flex items-center gap-3">
-                <Icon className="h-4 w-4 text-muted-foreground" />
-                {item.isLink ? (
-                  <Link
-                    href={item.href ?? "#"}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    {item.content}
-                  </Link>
-                ) : (
-                  <span className="text-sm">{item.content}</span>
-                )}
-              </div>
-            );
-          })}
+          {contacts && contacts.length > 0 ? (
+            contacts.map((item) => {
+              const Icon = contactIconMap[item.type];
+              const isEditing = editingContact === item.id;
+              return (
+                <div key={item.id} className="flex items-center gap-3">
+                  <Icon className="h-4 w-4 text-muted-foreground"/>
+                  {isEditing ? (
+                    <EditContactInline
+                      initialContent={item.content}
+                      onSave={(newContent) =>
+                        handleEditSave(item.id, newContent)
+                      }
+                      onCancel={handleEditCancel}
+                    />
+                  ) : (
+                    <>
+                      <span className="flex-1 truncate text-sm">
+                        {item.content}
+                      </span>
+                      <Button
+                        icon={<Pencil className="h-4 w-4"/>}
+                        variant="outline"
+                        size="icon"
+                        className="p-2 h-8 w-8"
+                        onClick={() => handleEditStart(item)}
+                      />
+                      <Button
+                        icon={<Trash className="h-4 w-4"/>}
+                        variant="outline"
+                        size="icon"
+                        className="p-2 h-8 w-8 hover:text-red-500"
+                        onClick={() => handleContactDelete(item.id)}
+                      />
+                    </>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <span className="block flex-1 text-center text-gray-400">
+              Немає контактів
+            </span>
+          )}
         </div>
         <div className="flex w-full gap-2 flex-wrap">
-
-          <UpdateProfileModal />
+          <AddContactModal/>
+          <UpdateProfileModal/>
           <Button
-            icon={<LogOutIcon />}
+            icon={<LogOutIcon/>}
             className="w-full"
             variant="destructive"
             onClick={handleSignOut}
