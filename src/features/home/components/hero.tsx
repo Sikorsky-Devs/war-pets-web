@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import IMAGES from "@/constants/images";
+import { Routes } from "@/constants/navigation";
 
 const Hero = () => {
   return (
@@ -18,10 +20,18 @@ const Hero = () => {
               притулку або взяти звідти нового улюбленця.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Button size="lg">Знайти тварину</Button>
-              <Button variant="outline" size="lg">
+              <Link
+                href={Routes.Adverts}
+                className={buttonVariants({ size: "lg" })}
+              >
+                Знайти тварину
+              </Link>
+              <Link
+                href={Routes.Shelters}
+                className={buttonVariants({ variant: "outline", size: "lg" })}
+              >
                 Я знайшов тварину
-              </Button>
+              </Link>
             </div>
           </div>
           <div className="relative order-1 order-first h-[300px] overflow-hidden rounded-xl sm:h-[400px] lg:order-last lg:h-[500px]">

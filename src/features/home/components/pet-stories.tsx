@@ -3,12 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import {buttonVariants} from "@/components/ui/button";
-import {Routes} from "@/constants/navigation";
+import { buttonVariants } from "@/components/ui/button";
+import { Routes } from "@/constants/navigation";
 import usePostsQuery from "@/features/posts/hooks/use-posts-query";
 
 const PetStories = () => {
-  const { posts } = usePostsQuery();
+  const { posts } = usePostsQuery(3);
 
   return (
     <section
@@ -36,14 +36,6 @@ const PetStories = () => {
               key={index}
               className="flex flex-col space-y-4 rounded-xl border bg-background p-6"
             >
-              <div className="relative h-48 w-full overflow-hidden rounded-lg">
-                <Image
-                  src={`/placeholder.svg?height=200&width=300&text=Історія ${index + 1}`}
-                  alt={`Історія ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
               <h3 className="text-xl font-bold">{post.title}</h3>
               <p className="text-sm text-muted-foreground">
                 &#34;{post.content}&#34;
@@ -53,7 +45,12 @@ const PetStories = () => {
         </div>
 
         <div className="mt-8 flex justify-center">
-          <Link href={Routes.Posts} className={buttonVariants({ variant: "outline" })}>Більше історій</Link>
+          <Link
+            href={Routes.Posts}
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Більше історій
+          </Link>
         </div>
       </div>
     </section>

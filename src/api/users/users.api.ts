@@ -1,9 +1,9 @@
 import { type UserUpdateDto } from "@/api/users/users.dto";
 import { API_URL } from "@/constants/global";
 import type { ErrorResponse } from "@/types/api";
+import { type Contact } from "@/types/contacts";
 import { type ShelterUser } from "@/types/user";
 import { generateAuthHeaders } from "@/utils/auth-utils";
-import {Contact} from "@/types/contacts";
 
 export const getUser = async (id: string) => {
   try {
@@ -64,7 +64,7 @@ export const getShelters = async () => {
   } catch (e) {
     throw e;
   }
-}
+};
 
 export const getUserContacts = async (id: string) => {
   try {
@@ -85,4 +85,25 @@ export const getUserContacts = async (id: string) => {
   } catch (e) {
     throw e;
   }
-}
+};
+
+export const getUserChats = async () => {
+  try {
+    const response = await fetch(`${API_URL}/users/chats`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...generateAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const error = (await response.json()) as ErrorResponse;
+      throw new Error(error.message);
+    }
+
+    return (await response.json()) as ShelterUser[];
+  } catch (e) {
+    throw e;
+  }
+};

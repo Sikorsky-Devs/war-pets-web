@@ -19,6 +19,10 @@ export type Permissions = {
     dataType: Post;
     action: "view" | "create";
   };
+  chats: {
+    dataType: string;
+    action: "view" | "create";
+  };
 };
 
 export type PermissionCheck<Key extends keyof Permissions> =

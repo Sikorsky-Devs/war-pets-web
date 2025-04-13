@@ -28,8 +28,8 @@ const PostsPage = () => {
 
   const currentPosts = currentItems(posts);
 
-  const handlePageChangeWithScroll = (pageNumber: number) => {
-    handlePageChange(pageNumber);
+  const handlePageChangeWithScroll = async (pageNumber: number) => {
+    await handlePageChange(pageNumber);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

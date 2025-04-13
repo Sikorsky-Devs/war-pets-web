@@ -1,4 +1,7 @@
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+import { buttonVariants } from "@/components/ui/button";
+import { Routes } from "@/constants/navigation";
 
 const CallToAction = () => {
   return (
@@ -14,12 +17,9 @@ const CallToAction = () => {
               новий дім
             </p>
           </div>
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <Button size="lg">Зареєструватися</Button>
-            <Button variant="outline" size="lg">
-              Дізнатися більше
-            </Button>
-          </div>
+          <Link href={Routes.SignUp} className={buttonVariants({ size: "lg" })}>
+            Зареєструватися
+          </Link>
         </div>
       </div>
     </section>

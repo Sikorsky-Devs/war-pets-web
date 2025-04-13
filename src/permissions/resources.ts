@@ -60,4 +60,18 @@ export const RESOURCES: PermissionsByResource = {
       create: true,
     },
   },
+  chats: {
+    GUEST: {
+      view: false,
+      create: false,
+    },
+    VOLUNTEER: {
+      view: true,
+      create: true,
+    },
+    SHELTER: {
+      view: true,
+      create: true,
+    },
+  },
 };

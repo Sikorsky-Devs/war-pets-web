@@ -5,12 +5,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useQueryState } from "nuqs";
 
 import { getAllPets, getSavedPets } from "@/api/pets/pets.api";
+import { PaginationControls } from "@/components/pagination/pagination-controls";
 import { Button } from "@/components/ui/button";
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
 import PetFilters from "@/features/adverts/component/pet-filters";
 import useDebounce from "@/hooks/use-debounce";
-import { PetResponse } from "@/types/pet";
+import { usePagination } from "@/hooks/use-pagination";
+import { type PetResponse } from "@/types/pet";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -26,16 +28,11 @@ const PetsPage = () => {
     parse: (value) => (value ? Number.parseInt(value) : undefined),
   });
   const [healthStatus] = useQueryState("healthStatus");
-  const [page, setPage] = useQueryState("page", {
-    defaultValue: "1",
-    parse: (value) => value,
-  });
 
   const debouncedSearch = useDebounce(search ?? "", 500);
-  const currentPage = Number(page);
 
   const {
-    data: pets,
+    data: pets = [],
     isLoading,
     error,
   } = useQuery({
@@ -70,11 +67,13 @@ const PetsPage = () => {
     .fill(0)
     .map((_, index) => <PetCardSkeleton key={`skeleton-${index}`} />);
 
-  const totalItems = pets?.length ?? 0;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentPets = pets?.slice(startIndex, endIndex);
+  const { currentPage, totalPages, handlePageChange, currentItems } =
+    usePagination({
+      totalItems: pets.length,
+      itemsPerPage: ITEMS_PER_PAGE,
+    });
+
+  const currentPets = currentItems(pets);
 
   return (
     <div className="mx-auto max-w-screen-xl gap-6 px-4 py-4 sm:px-6 lg:px-8">
@@ -104,44 +103,13 @@ const PetsPage = () => {
                 })}
               </div>
 
-              {totalPages > 1 && (
-                <div className="mt-8 flex items-center justify-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setPage(String(currentPage - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (pageNum) => (
-                        <Button
-                          key={pageNum}
-                          variant={
-                            pageNum === currentPage ? "default" : "outline"
-                          }
-                          size="icon"
-                          onClick={() => setPage(String(pageNum))}
-                        >
-                          {pageNum}
-                        </Button>
-                      ),
-                    )}
-                  </div>
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setPage(String(currentPage + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
+              <div className="mt-8">
+                <PaginationControls
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </>
           )}
         </div>

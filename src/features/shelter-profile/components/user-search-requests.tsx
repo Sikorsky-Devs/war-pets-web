@@ -5,6 +5,7 @@ import { uk } from "date-fns/locale/uk";
 import { ChevronLeft, ChevronRight, MessageCircle, Search } from "lucide-react";
 import { useQueryState } from "nuqs";
 
+import { PaginationControls } from "@/components/pagination/pagination-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +16,8 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import useSearchRequestsQuery from "@/features/shelter-profile/hooks/use-search-requests-query";
+import { usePagination } from "@/hooks/use-pagination";
+import useChatStore from "@/store/use-chat-store";
 import { type PetSearchRequest } from "@/types/pet";
 import { formatHealthStatus, formatPetType } from "@/utils/shelter-pets-utils";
 import { getFullName, getUserName } from "@/utils/user-utils";
@@ -22,13 +25,16 @@ import { getFullName, getUserName } from "@/utils/user-utils";
 const ITEMS_PER_PAGE = 5;
 
 const UserSearchRequests = () => {
-  const [page, setPage] = useQueryState("page", {
-    defaultValue: "1",
-    parse: (value) => value,
-  });
+  const { setReceiverId } = useChatStore();
+  const { searchRequests = [], isLoading } = useSearchRequestsQuery();
 
-  const { searchRequests, isLoading } = useSearchRequestsQuery();
-  const currentPage = Number(page);
+  const { currentPage, totalPages, handlePageChange, currentItems } =
+    usePagination({
+      totalItems: searchRequests.length,
+      itemsPerPage: ITEMS_PER_PAGE,
+    });
+
+  const currentRequests = currentItems(searchRequests);
 
   if (isLoading) {
     return (
@@ -95,12 +101,6 @@ const UserSearchRequests = () => {
       </div>
     );
   }
-
-  const totalItems = searchRequests.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentRequests = searchRequests.slice(startIndex, endIndex);
 
   return (
     <div className="space-y-6">
@@ -182,49 +182,23 @@ const UserSearchRequests = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-end border-t pt-4">
-              <Button size="sm">
+              <Button
+                onClick={() => setReceiverId(request.volunteerId)}
+                size="sm"
+              >
                 <MessageCircle className="mr-2 h-4 w-4" /> Чат з користувачем
               </Button>
             </CardFooter>
           </Card>
         ))}
       </div>
-      {totalPages > 1 && (
-        <div className="mt-8 flex items-center justify-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setPage(String(currentPage - 1))}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-
-          <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNum) => (
-                <Button
-                  key={pageNum}
-                  variant={pageNum === currentPage ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => setPage(String(pageNum))}
-                >
-                  {pageNum}
-                </Button>
-              ),
-            )}
-          </div>
-
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setPage(String(currentPage + 1))}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
+      <div className="mt-8">
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };
