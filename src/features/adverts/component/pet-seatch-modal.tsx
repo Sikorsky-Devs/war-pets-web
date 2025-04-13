@@ -15,7 +15,7 @@ import {
 import PetSearchForm from "@/features/adverts/component/pet-search-form";
 
 const PetSearchModal = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

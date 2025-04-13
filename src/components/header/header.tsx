@@ -16,7 +16,7 @@ const Header = () => {
 
         <div className="flex h-full items-center gap-3">
           <NavMenu className="hidden md:block" />
-          {canSearchCreate && <PetSeatchModal />}
+          {<PetSeatchModal />}
           <Separator orientation="vertical" className="h-8" />
           <div className="hidden gap-2 md:flex">
             <UserProfile />
