@@ -14,7 +14,6 @@
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -90,6 +89,7 @@ pnpm start
 
 ## Project Structure
 
+A simplified look at the project layout:
 ```
 ├── public/
 │   ├── favicon.ico
