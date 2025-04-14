@@ -20,7 +20,9 @@ export const getFullName = (
   firstName?: string | null,
   lastName?: string | null,
   middleName?: string | null,
+  name?: string | null,
 ) => {
+  if (name) return name;
   if (firstName && lastName && middleName) {
     return `${middleName} ${firstName} ${lastName}`;
   }

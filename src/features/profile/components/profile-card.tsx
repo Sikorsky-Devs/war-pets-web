@@ -1,7 +1,7 @@
 "use client";
-import {LogOutIcon, Pencil, Trash} from "lucide-react";
+import { LogOutIcon, Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,12 +11,12 @@ import { Routes } from "@/constants/navigation";
 import EditContactInline from "@/features/profile/components/edit-contact-inline";
 import ProfileCardSkeleton from "@/features/profile/components/profile-card-skeleton";
 import UpdateProfileModal from "@/features/profile/components/update-profile-modal";
-import {useDeleteContact} from "@/features/profile/hooks/use-delete-contact";
-import {useEditContact} from "@/features/profile/hooks/use-edit-contact";
+import { useDeleteContact } from "@/features/profile/hooks/use-delete-contact";
+import { useEditContact } from "@/features/profile/hooks/use-edit-contact";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
 import { isShelter, logoutUser, removeAuthToken } from "@/utils/auth-utils";
-import {contactIconMap} from "@/utils/contacts-utils";
+import { contactIconMap } from "@/utils/contacts-utils";
 import { getAccountType, getFullName } from "@/utils/user-utils";
 
 import AddContactModal from "./add-contact-modal";
@@ -43,6 +43,7 @@ const ProfileCard = () => {
     user?.firstName,
     user?.lastName,
     user?.middleName,
+    user?.name,
   );
 
   const handleContactDelete = async (contactId: string) => {
@@ -55,7 +56,10 @@ const ProfileCard = () => {
 
   const handleEditSave = async (contactId: string, editValue: string) => {
     try {
-      await editContactMutation.mutateAsync({ contactId, newContent: editValue });
+      await editContactMutation.mutateAsync({
+        contactId,
+        newContent: editValue,
+      });
       setEditingContact(null);
     } catch (error) {
       console.error("Помилка при оновленні контакту:", error);
@@ -94,7 +98,7 @@ const ProfileCard = () => {
               const isEditing = editingContact === item.id;
               return (
                 <div key={item.id} className="flex items-center gap-3">
-                  <Icon className="h-4 w-4 text-muted-foreground"/>
+                  <Icon className="h-4 w-4 text-muted-foreground" />
                   {isEditing ? (
                     <EditContactInline
                       initialContent={item.content}
@@ -109,17 +113,17 @@ const ProfileCard = () => {
                         {item.content}
                       </span>
                       <Button
-                        icon={<Pencil className="h-4 w-4"/>}
+                        icon={<Pencil className="h-4 w-4" />}
                         variant="outline"
                         size="icon"
-                        className="p-2 h-8 w-8"
+                        className="h-8 w-8 p-2"
                         onClick={() => setEditingContact(item.id)}
                       />
                       <Button
-                        icon={<Trash className="h-4 w-4"/>}
+                        icon={<Trash className="h-4 w-4" />}
                         variant="outline"
                         size="icon"
-                        className="p-2 h-8 w-8 hover:text-red-500"
+                        className="h-8 w-8 p-2 hover:text-red-500"
                         onClick={() => handleContactDelete(item.id)}
                       />
                     </>
@@ -133,11 +137,11 @@ const ProfileCard = () => {
             </span>
           )}
         </div>
-        <div className="flex w-full gap-2 flex-wrap">
-          <AddContactModal/>
-          <UpdateProfileModal/>
+        <div className="flex w-full flex-wrap gap-2">
+          <AddContactModal />
+          <UpdateProfileModal />
           <Button
-            icon={<LogOutIcon/>}
+            icon={<LogOutIcon />}
             className="w-full"
             variant="destructive"
             onClick={handleSignOut}

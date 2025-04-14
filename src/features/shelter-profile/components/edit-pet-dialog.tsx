@@ -41,9 +41,6 @@ interface EditPetDialogProps extends PropsWithChildren {
 const EditPetDialog = ({ pet, children }: EditPetDialogProps) => {
   const [open, setOpen] = useState(false);
   const {
-    user: { id },
-  } = useAuthStore();
-  const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -67,7 +64,7 @@ const EditPetDialog = ({ pet, children }: EditPetDialogProps) => {
       await editPetById(pet.id, data);
 
       setOpen(false);
-      await queryClient.invalidateQueries({ queryKey: ["pets", id] });
+      await queryClient.invalidateQueries({ queryKey: ["pets"] });
       toast.success("Інформацію про тварину оновлено");
     } catch (e) {
       if (e instanceof Error)
@@ -77,7 +74,7 @@ const EditPetDialog = ({ pet, children }: EditPetDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader className="flex flex-col gap-2">
           <DialogTitle>Редагувати інформацію про тварину</DialogTitle>

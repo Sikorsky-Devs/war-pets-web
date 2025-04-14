@@ -74,4 +74,18 @@ export const RESOURCES: PermissionsByResource = {
       create: true,
     },
   },
+  bringPet: {
+    GUEST: {
+      view: false,
+      create: false,
+    },
+    VOLUNTEER: {
+      view: true,
+      create: true,
+    },
+    SHELTER: {
+      view: false,
+      create: false,
+    },
+  },
 };

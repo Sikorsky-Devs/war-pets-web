@@ -12,14 +12,16 @@ import {
 import UserAvatar from "@/components/user-avatar";
 import useCommentsQuery from "@/features/shelter/hooks/use-comments-query";
 import { hasPermission } from "@/permissions";
+import useAuthStore from "@/store/use-auth-store";
 import { getUserName } from "@/utils/user-utils";
 
 const CommentsList = () => {
+  const { user } = useAuthStore();
   const { id } = useParams();
 
   const { comments } = useCommentsQuery(id as string);
 
-  const canComment = hasPermission("comments", 'create');
+  const canComment = hasPermission(user, "comments", "create");
 
   if (comments.length === 0) {
     return (
@@ -58,10 +60,11 @@ const CommentsList = () => {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-4 w-4 ${i < comment.stars
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "text-gray-300"
-                        }`}
+                      className={`h-4 w-4 ${
+                        i < comment.stars
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }`}
                     />
                   ))}
                 </div>

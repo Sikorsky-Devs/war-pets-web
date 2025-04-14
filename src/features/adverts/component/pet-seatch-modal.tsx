@@ -15,7 +15,7 @@ import {
 import PetSearchForm from "@/features/adverts/component/pet-search-form";
 
 const PetSearchModal = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -23,8 +23,8 @@ const PetSearchModal = () => {
         <Button
           className="h-9 w-9 sm:h-9 sm:w-auto sm:px-4 sm:py-2"
           variant="outline"
+          icon={<Search />}
         >
-          <Search className="h-4 w-4" />
           <span className="hidden sm:inline">Пошук тварин</span>
         </Button>
       </DialogTrigger>

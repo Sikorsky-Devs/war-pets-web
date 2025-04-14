@@ -10,9 +10,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { hasPermission } from "@/permissions";
+import useAuthStore from "@/store/use-auth-store";
 
 const ChatPopover = () => {
-  const isVisible = hasPermission("chats", "view");
+  const { user } = useAuthStore();
+  const isVisible = hasPermission(user, "chats", "view");
 
   return (
     <Popover>

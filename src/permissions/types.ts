@@ -23,6 +23,10 @@ export type Permissions = {
     dataType: string;
     action: "view" | "create";
   };
+  bringPet: {
+    dataType: string;
+    action: "view" | "create";
+  };
 };
 
 export type PermissionCheck<Key extends keyof Permissions> =

@@ -1,15 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { Camera, Upload, X } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Camera, X } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 
-import { updateUser } from "@/api/users/users.api";
+import { updateUser, updateUserAvatar } from "@/api/users/users.api";
 import { updateUserSchema, type UserUpdateDto } from "@/api/users/users.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,9 +35,11 @@ interface ProfileUpdateFormProps {
 
 const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    user.avatarLink,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -62,13 +64,19 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
   const isShelterUser = isShelter(user.accountType);
 
   const submitHandler = async (data: UserUpdateDto) => {
+    if (!selectedImage) return;
     try {
+      const formData = new FormData();
+      formData.append("file", selectedImage);
+
+      await updateUserAvatar(formData);
+
       await updateUser(data, user.id);
+      await queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
       toast.success("Профіль успішно оновлено");
       reset();
       closeModal();
     } catch (error) {
-      console.error("Error updating profile:", error);
       toast.error("Не вдалося оновити профіль. Спробуйте ще раз.");
     }
   };
@@ -94,39 +102,6 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
       setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(file);
-  };
-
-  const handleImageUpload = async () => {
-    if (!selectedImage) return;
-
-    setIsUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("image", selectedImage);
-
-      // Example API call - replace with your actual endpoint
-      // const response = await fetch('/api/users/profile-image', {
-      //   method: 'POST',
-      //   body: formData,
-      // });
-
-      // if (!response.ok) throw new Error('Failed to upload image');
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Success handling
-      toast.success("Зображення профілю успішно завантажено");
-
-      // Reset after successful upload if needed
-      // setSelectedImage(null);
-      // setImagePreview(null);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Не вдалося завантажити зображення. Будь ласка, спробуйте ще раз.");
-    } finally {
-      setIsUploading(false);
-    }
   };
 
   const clearSelectedImage = () => {
@@ -193,16 +168,6 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <Button
-              type="button"
-              onClick={handleImageUpload}
-              isLoading={isUploading}
-              disabled={!selectedImage || isUploading}
-              className="flex items-center gap-2"
-              icon={<Upload className="h-4 w-4" />}
-            >
-              Завантажити фото
-            </Button>
             <p className="text-xs text-muted-foreground">
               Підтримувані формати: JPG, PNG, GIF. Макс. розмір: 5МБ
             </p>
@@ -281,6 +246,16 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
               )}
             </div>
           )}
+
+          {isShelterUser && (
+            <Input
+              id="donationLink"
+              label="Посилання для пожертв"
+              error={errors.donationLink?.message}
+              placeholder="https://example.com/donate"
+              {...register("donationLink")}
+            />
+          )}
         </div>
 
         <div className="space-y-4">
@@ -293,11 +268,12 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
           />
 
           <Input
-            id="donationLink"
-            label="Посилання для пожертв"
-            error={errors.donationLink?.message}
-            placeholder="https://example.com/donate"
-            {...register("donationLink")}
+            id="currentPassword"
+            type="password"
+            label="Поточний пароль"
+            error={errors.currentPassword?.message}
+            placeholder="••••••••"
+            {...register("currentPassword")}
           />
 
           <Input
@@ -328,7 +304,9 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
               Скасувати
             </Button>
           )}
-          <Button type="submit">Зберегти зміни</Button>
+          <Button isLoading={isSubmitting} type="submit">
+            Зберегти зміни
+          </Button>
         </div>
       </div>
     </form>

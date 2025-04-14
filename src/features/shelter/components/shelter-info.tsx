@@ -7,12 +7,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
 import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
-import AddPetDialog from "@/features/shelter-profile/components/add-pet-dialog";
 import useShelterQuery from "@/features/shelter/hooks/use-shelter-query";
+import AddPetDialog from "@/features/shelter-profile/components/add-pet-dialog";
+import { hasPermission } from "@/permissions";
+import useAuthStore from "@/store/use-auth-store";
 
 const ShelterInfo = () => {
   const { id } = useParams();
   const { back } = useRouter();
+  const { user } = useAuthStore();
+  const canBringPet = hasPermission(user, "bringPet", "create");
 
   const { shelter, isLoading, error } = useShelterQuery(id as string);
 
@@ -42,7 +46,12 @@ const ShelterInfo = () => {
 
   return (
     <div className="mb-8 flex flex-col gap-6 md:flex-row">
-      <UserAvatar className="size-40" size={40} image={shelter?.avatarLink} />
+      <UserAvatar
+        className="size-40"
+        size={40}
+        image={shelter?.avatarLink}
+        isShelter
+      />
 
       <div className="w-full md:w-2/3">
         <h1 className="mb-2 text-3xl font-bold">{shelter?.name}</h1>
@@ -78,15 +87,17 @@ const ShelterInfo = () => {
             </Link>
           )}
 
-          <AddPetDialog>
-            <Button
-              icon={<PlusCircle className="h-4 w-4" />}
-              className="gap-1"
-              variant="secondary"
-            >
-              Здати тварину
-            </Button>
-          </AddPetDialog>
+          {canBringPet && (
+            <AddPetDialog>
+              <Button
+                icon={<PlusCircle className="h-4 w-4" />}
+                className="gap-1"
+                variant="secondary"
+              >
+                Здати тварину
+              </Button>
+            </AddPetDialog>
+          )}
         </div>
       </div>
     </div>

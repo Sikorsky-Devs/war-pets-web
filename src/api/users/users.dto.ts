@@ -13,6 +13,7 @@ export const updateUserSchema = z.object({
     .url("Please enter a valid URL")
     .optional()
     .or(z.literal("")),
+  currentPassword: z.string().optional(),
   newPassword: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" })

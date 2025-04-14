@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import IMAGES from "@/constants/images";
 import { Routes } from "@/constants/navigation";
 
@@ -39,7 +39,7 @@ const Hero = () => {
               src={IMAGES.PET_HERO}
               alt="Щасливі врятовані тварини"
               fill
-              className="object-cover md:object-contain"
+              className="object-contain"
               priority
             />
           </div>

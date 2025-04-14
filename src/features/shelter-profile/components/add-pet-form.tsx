@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Camera, X } from "lucide-react";
+import { useParams } from "next/navigation";
 import type React from "react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,7 +28,6 @@ import {
 import useAuthStore from "@/store/use-auth-store";
 import type { PetHealthType, PetType } from "@/types/pet";
 import { isShelter } from "@/utils/auth-utils";
-import { useParams } from "next/navigation";
 
 type AddPetFormProps = {
   onClose: () => void;
@@ -82,7 +82,6 @@ const AddPetForm = ({ onClose }: AddPetFormProps) => {
   };
 
   const onSubmit = async (data: AddPetFormData) => {
-    if (!id) return;
     try {
       if (!selectedImage) {
         toast.error("Будь ласка, виберіть фото тварини");
@@ -95,7 +94,11 @@ const AddPetForm = ({ onClose }: AddPetFormProps) => {
         isApproved: isUserShelter,
       });
       await handleImageUpload(petId);
-      toast.success(isUserShelter ? "Тварину додано до притулку" : "Запит успішно відправлено");
+      toast.success(
+        isUserShelter
+          ? "Тварину додано до притулку"
+          : "Запит успішно відправлено",
+      );
       await queryClient.invalidateQueries({ queryKey: ["pets"] });
       onClose();
     } catch (e) {

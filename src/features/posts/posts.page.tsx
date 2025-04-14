@@ -8,11 +8,13 @@ import PostCardSkeleton from "@/features/posts/components/post-card-skeleton";
 import PostDetail from "@/features/posts/components/post-detail";
 import { usePagination } from "@/hooks/use-pagination";
 import { hasPermission } from "@/permissions";
+import useAuthStore from "@/store/use-auth-store";
 import { type Post } from "@/types/post";
 
 import usePostsQuery from "./hooks/use-posts-query";
 
 const PostsPage = () => {
+  const { user } = useAuthStore();
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const itemsPerPage = 6;
 
@@ -24,7 +26,7 @@ const PostsPage = () => {
       itemsPerPage,
     });
 
-  const canCreatePost = hasPermission("posts", "create");
+  const canCreatePost = hasPermission(user, "posts", "create");
 
   const currentPosts = currentItems(posts);
 

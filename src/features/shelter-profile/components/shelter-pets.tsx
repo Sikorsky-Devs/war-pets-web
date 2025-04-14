@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
@@ -46,8 +46,9 @@ const ShelterPets = () => {
     },
   });
 
-  const handleDeletePet = (petId: string) => {
+  const handleDeletePet = async (petId: string) => {
     deleteMutation.mutate(petId);
+    await queryClient.invalidateQueries({ queryKey: ["pets"] });
   };
 
   if (isLoading) {
@@ -132,8 +133,12 @@ const ShelterPets = () => {
                 <PetDetailsModal petId={pet.id} className="w-full" />
                 <div className="grid w-full grid-cols-2 gap-2">
                   <EditPetDialog pet={pet}>
-                    <Button className="w-full" variant="outline" size="sm">
-                      <Pencil className="h-4 w-4" />
+                    <Button
+                      icon={<Pencil />}
+                      className="w-full"
+                      variant="outline"
+                      size="sm"
+                    >
                       Редагувати
                     </Button>
                   </EditPetDialog>
@@ -141,17 +146,13 @@ const ShelterPets = () => {
                     variant="destructive"
                     size="sm"
                     onClick={() => handleDeletePet(pet.id)}
+                    isLoading={deleteMutation.isPending}
+                    icon={<Trash2 />}
                     disabled={
                       deleteMutation.isPending &&
                       deleteMutation.variables === pet.id
                     }
                   >
-                    {deleteMutation.isPending &&
-                      deleteMutation.variables === pet.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-4 w-4" />
-                    )}
                     Видалити
                   </Button>
                 </div>

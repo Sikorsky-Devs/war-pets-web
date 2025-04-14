@@ -10,6 +10,8 @@ const ShelterPetsList = () => {
 
   const { pets, isLoading } = usePetsQuery(id as string);
 
+  const filteredPets = pets?.filter((pet) => pet.isApproved);
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -22,7 +24,7 @@ const ShelterPetsList = () => {
     );
   }
 
-  if (!pets?.length) {
+  if (!filteredPets?.length) {
     return (
       <Card>
         <CardContent className="py-6 text-center text-muted-foreground">
@@ -32,12 +34,12 @@ const ShelterPetsList = () => {
           </p>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {pets?.map((pet, index) => <PetCard key={index} pet={pet} />)}
+      {filteredPets?.map((pet, index) => <PetCard key={index} pet={pet} />)}
     </div>
   );
 };

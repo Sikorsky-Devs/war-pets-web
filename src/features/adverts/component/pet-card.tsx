@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { hasPermission } from "@/permissions";
+import useAuthStore from "@/store/use-auth-store";
 import { type Pet, type PetResponse } from "@/types/pet";
 import { getPetAge } from "@/utils/pet-utils";
 
@@ -21,10 +22,11 @@ interface PetCardProps {
 }
 
 const PetCard = ({ pet, isSaved = false }: PetCardProps) => {
+  const { user } = useAuthStore();
   const { imageLink, address, age, name, shelter, id } = pet;
   const queryClient = useQueryClient();
 
-  const canSave = hasPermission("save", "create");
+  const canSave = hasPermission(user, "save", "create");
 
   const { mutate: handleSave, isPending: isSaving } = useMutation({
     mutationFn: async () => {

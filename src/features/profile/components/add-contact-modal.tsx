@@ -1,12 +1,18 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { PlusCircle } from "lucide-react"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { PlusCircle } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import { addContactSchema, type AddContactDto} from "@/api/contacts/contacts.dto"
-import { Button } from "@/components/ui/button"
+import { addContact } from "@/api/contacts/contacts.api";
+import {
+  type AddContactDto,
+  addContactSchema,
+} from "@/api/contacts/contacts.dto";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,17 +21,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { type ContactsType } from "@/types/contacts";
 import { getPlaceholder } from "@/utils/contacts-utils";
-import {toast} from "sonner";
-import {addContact} from "@/api/contacts/contacts.api";
 
 const AddContactModal = () => {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -46,7 +57,7 @@ const AddContactModal = () => {
       toast.success("Контакт додано");
       reset();
       setOpen(false);
-      window.location.reload();
+      await queryClient.invalidateQueries({ queryKey: ["contacts"] });
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
       toast.error("Трапилась помилка");
@@ -81,7 +92,9 @@ const AddContactModal = () => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Додати новий контакт</DialogTitle>
-          <DialogDescription>Додайте новий спосіб зв&#39;язку до вашого профілю.</DialogDescription>
+          <DialogDescription>
+            Додайте новий спосіб зв&#39;язку до вашого профілю.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -117,7 +130,11 @@ const AddContactModal = () => {
           />
 
           <DialogFooter className="pt-4">
-            <Button variant="outline" type="button" onClick={() => setOpen(false)}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => setOpen(false)}
+            >
               Скасувати
             </Button>
             <Button type="submit">Зберегти</Button>

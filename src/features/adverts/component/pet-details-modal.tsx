@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { Routes } from "@/constants/navigation";
 import { hasPermission } from "@/permissions";
+import useAuthStore from "@/store/use-auth-store";
 import { getPetAge } from "@/utils/pet-utils";
 import { cn } from "@/utils/styles-utils";
 
@@ -30,10 +31,11 @@ interface PetDetailsModalProps {
 
 const PetDetailsModal = memo(
   ({ petId, isSaved = false, className }: PetDetailsModalProps) => {
+    const { user } = useAuthStore();
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
 
-    const canSave = hasPermission("save", "create");
+    const canSave = hasPermission(user, "save", "create");
 
     const { data: pet, isLoading } = useQuery({
       queryKey: ["pet", petId],
