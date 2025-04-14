@@ -33,14 +33,10 @@ const ShelterPets = () => {
   const queryClient = useQueryClient();
 
   const { pets, isLoading } = usePetsQuery(user.id);
+  const filteredPets = pets.filter((pet) => pet.isApproved);
 
   const deleteMutation = useMutation({
     mutationFn: (petId: string) => deletePetById(petId),
-    onSuccess: (_, petId) => {
-      queryClient.setQueryData(["pets"], (oldData: Pet[] | undefined) =>
-        oldData ? oldData.filter((pet) => pet.id !== petId) : [],
-      );
-    },
     onError: () => {
       toast.error("Помилка при видаленні тварини");
     },
@@ -82,7 +78,7 @@ const ShelterPets = () => {
 
   return (
     <div className="space-y-6">
-      {pets.length === 0 ? (
+      {filteredPets.length === 0 ? (
         <div className="rounded-lg border bg-muted/20 p-12 text-center">
           <p className="text-muted-foreground">
             У цьому притулку ще немає тварин
@@ -90,7 +86,7 @@ const ShelterPets = () => {
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2">
-          {pets.map((pet) => (
+          {filteredPets.map((pet) => (
             <Card key={pet.id} className="overflow-hidden">
               <div className="relative h-48 w-full">
                 <Image

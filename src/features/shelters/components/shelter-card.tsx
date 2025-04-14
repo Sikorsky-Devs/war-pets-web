@@ -1,12 +1,20 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
-import { Routes } from "@/constants/navigation";
-import type { ShelterUser } from "@/types/user";
 import { Heart, InfoIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
+import { Routes } from "@/constants/navigation";
+import type { ShelterUser } from "@/types/user";
+import { cn } from "@/utils/styles-utils";
 
 interface ShelterCardProps {
   shelter: ShelterUser;
@@ -30,9 +38,7 @@ const ShelterCard = ({ shelter }: ShelterCardProps) => {
         {shelter.stars && (
           <div className="flex items-center">
             <span className="text-yellow-400">★</span>
-            <span className="ml-1 text-sm text-gray-600">
-              {shelter.stars}
-            </span>
+            <span className="ml-1 text-sm text-gray-600">{shelter.stars}</span>
           </div>
         )}
       </CardHeader>
@@ -48,19 +54,20 @@ const ShelterCard = ({ shelter }: ShelterCardProps) => {
         </p>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Button icon={<InfoIcon />} className="mr-2">
-          <Link href={shelterHref}>Деталі</Link>
-        </Button>
+        <Link className={cn(buttonVariants(), "mr-2")} href={shelterHref}>
+          <InfoIcon />
+          Деталі
+        </Link>
         {shelter.donationLink && (
-          <Button icon={<Heart />} variant="outline">
-            <Link
-              href={shelter.donationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Підтримати
-            </Link>
-          </Button>
+          <Link
+            className={buttonVariants({ variant: "outline" })}
+            href={shelter.donationLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Heart />
+            Підтримати
+          </Link>
         )}
       </CardFooter>
     </Card>

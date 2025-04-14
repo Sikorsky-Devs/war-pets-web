@@ -11,11 +11,13 @@ import useShelterQuery from "@/features/shelter/hooks/use-shelter-query";
 import AddPetDialog from "@/features/shelter-profile/components/add-pet-dialog";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
+import useChatStore from "@/store/use-chat-store";
 
 const ShelterInfo = () => {
   const { id } = useParams();
   const { back } = useRouter();
   const { user } = useAuthStore();
+  const { setReceiverId, setIsChatOpen, addChat } = useChatStore();
   const canBringPet = hasPermission(user, "bringPet", "create");
 
   const { shelter, isLoading, error } = useShelterQuery(id as string);
@@ -24,6 +26,21 @@ const ShelterInfo = () => {
     toast.error("Такого притулку не існує");
     back();
   }
+
+  const handleOpenChat = () => {
+    setReceiverId(shelter?.id ?? "");
+    setIsChatOpen(true);
+    addChat({
+      id: shelter?.id ?? "",
+      email: shelter?.email ?? "",
+      name: shelter?.name ?? "",
+      firstName: shelter?.firstName ?? "",
+      lastName: shelter?.lastName ?? "",
+      middleName: shelter?.middleName ?? "",
+      avatarLink: shelter?.avatarLink ?? "",
+      accountType: shelter?.accountType ?? "SHELTER",
+    });
+  };
 
   if (isLoading) {
     return (
@@ -71,7 +88,11 @@ const ShelterInfo = () => {
         <p className="mb-4">{shelter?.description}</p>
 
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" icon={<MessageCircleIcon />}>
+          <Button
+            onClick={handleOpenChat}
+            variant="outline"
+            icon={<MessageCircleIcon />}
+          >
             Чат з притулком
           </Button>
 

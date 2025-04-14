@@ -5,6 +5,7 @@ import { uk } from "date-fns/locale/uk";
 import { ChevronLeft, ChevronRight, MessageCircle, Search } from "lucide-react";
 import { useQueryState } from "nuqs";
 
+import { getUser } from "@/api/users/users.api";
 import { PaginationControls } from "@/components/pagination/pagination-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,7 @@ import { getFullName, getUserName } from "@/utils/user-utils";
 const ITEMS_PER_PAGE = 5;
 
 const UserSearchRequests = () => {
-  const { setReceiverId } = useChatStore();
+  const { setIsChatOpen, setReceiverId, addChat } = useChatStore();
   const { searchRequests = [], isLoading } = useSearchRequestsQuery();
 
   const { currentPage, totalPages, handlePageChange, currentItems } =
@@ -33,6 +34,13 @@ const UserSearchRequests = () => {
       totalItems: searchRequests.length,
       itemsPerPage: ITEMS_PER_PAGE,
     });
+
+  const handleOpenChat = async (receiverId: string) => {
+    const user = await getUser(receiverId);
+    addChat(user);
+    setReceiverId(receiverId);
+    setIsChatOpen(true);
+  };
 
   const currentRequests = currentItems(searchRequests);
 
@@ -183,7 +191,7 @@ const UserSearchRequests = () => {
             </CardContent>
             <CardFooter className="flex justify-end border-t pt-4">
               <Button
-                onClick={() => setReceiverId(request.volunteerId)}
+                onClick={() => handleOpenChat(request.volunteer.id)}
                 size="sm"
               >
                 <MessageCircle className="mr-2 h-4 w-4" /> Чат з користувачем

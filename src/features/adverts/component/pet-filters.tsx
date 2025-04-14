@@ -19,10 +19,19 @@ import { Slider } from "@/components/ui/slider";
 import { PET_HEALTH_STATUS_MAPPER, PET_TYPE_MAPPER } from "@/constants/mappers";
 
 const PetFilters = () => {
-  const [search, setSearch] = useQueryState("search", parseAsString.withDefault(""));
+  const [search, setSearch] = useQueryState(
+    "search",
+    parseAsString.withDefault(""),
+  );
   const [type, setType] = useQueryState("type");
-  const [ageFrom, setAgeFrom] = useQueryState("ageFrom", parseAsInteger.withDefault(0));
-  const [ageTo, setAgeTo] = useQueryState("ageTo", parseAsInteger.withDefault(20));
+  const [ageFrom, setAgeFrom] = useQueryState(
+    "ageFrom",
+    parseAsInteger.withDefault(0),
+  );
+  const [ageTo, setAgeTo] = useQueryState(
+    "ageTo",
+    parseAsInteger.withDefault(20),
+  );
   const [healthStatus, setHealthStatus] = useQueryState("healthStatus");
 
   const [ageRange, setAgeRange] = useState<[number, number]>([
@@ -61,6 +70,10 @@ const PetFilters = () => {
 
   const resetFilters = async () => {
     await setSearch("");
+    await setType(null);
+    await setHealthStatus(null);
+    await setAgeFrom(0);
+    await setAgeTo(20);
     setAgeRange([0, 20]);
   };
 

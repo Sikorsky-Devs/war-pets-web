@@ -8,6 +8,7 @@ import { memo, useState } from "react";
 import { toast } from "sonner";
 
 import { getPetById, savePet, unsavePet } from "@/api/pets/pets.api";
+import { getUser } from "@/api/users/users.api";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,6 +20,7 @@ import {
 import { Routes } from "@/constants/navigation";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
+import useChatStore from "@/store/use-chat-store";
 import { getPetAge } from "@/utils/pet-utils";
 import { cn } from "@/utils/styles-utils";
 
@@ -32,6 +34,7 @@ interface PetDetailsModalProps {
 const PetDetailsModal = memo(
   ({ petId, isSaved = false, className }: PetDetailsModalProps) => {
     const { user } = useAuthStore();
+    const { setReceiverId, setIsChatOpen, addChat } = useChatStore();
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
 
@@ -70,6 +73,13 @@ const PetDetailsModal = memo(
         toast.error("Помилка при збереженні тварини");
       },
     });
+
+    const handleOpenChat = async () => {
+      const user = await getUser(pet?.shelterId ?? "");
+      setReceiverId(pet?.shelterId ?? "");
+      setIsChatOpen(true);
+      addChat(user);
+    };
 
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -167,7 +177,11 @@ const PetDetailsModal = memo(
                     <InfoIcon className="size-4" />
                     <span>Детальніше про притулок</span>
                   </Link>
-                  <Button icon={<MessageCircleIcon />} size="sm">
+                  <Button
+                    onClick={handleOpenChat}
+                    icon={<MessageCircleIcon />}
+                    size="sm"
+                  >
                     Чат з притулком
                   </Button>
                 </div>

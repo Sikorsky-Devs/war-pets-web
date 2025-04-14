@@ -1,12 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useQueryState } from "nuqs";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 import { getAllPets, getSavedPets } from "@/api/pets/pets.api";
 import { PaginationControls } from "@/components/pagination/pagination-controls";
-import { Button } from "@/components/ui/button";
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
 import PetFilters from "@/features/adverts/component/pet-filters";
@@ -16,17 +14,11 @@ import { type PetResponse } from "@/types/pet";
 
 const ITEMS_PER_PAGE = 9;
 
-const PetsPage = () => {
+const AdvertsPage = () => {
   const [search] = useQueryState("search");
   const [type] = useQueryState("type");
-  const [ageFrom] = useQueryState("ageFrom", {
-    defaultValue: undefined,
-    parse: (value) => (value ? Number.parseInt(value) : undefined),
-  });
-  const [ageTo] = useQueryState("ageTo", {
-    defaultValue: undefined,
-    parse: (value) => (value ? Number.parseInt(value) : undefined),
-  });
+  const [ageFrom] = useQueryState("ageFrom", parseAsInteger.withDefault(0));
+  const [ageTo] = useQueryState("ageTo", parseAsInteger.withDefault(20));
   const [healthStatus] = useQueryState("healthStatus");
 
   const debouncedSearch = useDebounce(search ?? "", 500);
@@ -53,7 +45,7 @@ const PetsPage = () => {
     },
   });
 
-  const { data: savedPets } = useQuery({
+  const { data: savedPets, isLoading: isSavedPetLoading } = useQuery({
     queryKey: ["savedPets"],
     queryFn: getSavedPets,
   });
@@ -62,10 +54,6 @@ const PetsPage = () => {
     const savedPetIds = savedPets?.map((pet) => pet.id);
     return savedPetIds?.includes(id);
   };
-
-  const skeletonCards = Array(ITEMS_PER_PAGE)
-    .fill(0)
-    .map((_, index) => <PetCardSkeleton key={`skeleton-${index}`} />);
 
   const { currentPage, totalPages, handlePageChange, currentItems } =
     usePagination({
@@ -82,9 +70,11 @@ const PetsPage = () => {
         <PetFilters />
 
         <div className="lg:col-span-3">
-          {isLoading ? (
+          {isLoading || isSavedPetLoading ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {skeletonCards}
+              {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+                <PetCardSkeleton key={`skeleton-${index}`} />
+              ))}
             </div>
           ) : error ? (
             <div className="p-8 text-center text-red-500">
@@ -118,4 +108,4 @@ const PetsPage = () => {
   );
 };
 
-export default PetsPage;
+export default AdvertsPage;

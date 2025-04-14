@@ -1,7 +1,10 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { MessageCircle } from "lucide-react";
+import { useEffect } from "react";
 
+import { getUserChats } from "@/api/users/users.api";
 import ChatInterface from "@/components/chat/chat-interface";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,13 +14,29 @@ import {
 } from "@/components/ui/popover";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
+import useChatStore from "@/store/use-chat-store";
 
 const ChatPopover = () => {
+  const { chats, setChats, isChatOpen, setIsChatOpen } = useChatStore();
+
   const { user } = useAuthStore();
   const isVisible = hasPermission(user, "chats", "view");
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["chats", user?.id],
+    queryFn: getUserChats,
+  });
+
+  useEffect(() => {
+    if (!chats?.length && !isLoading && data) {
+      setChats(data);
+    }
+  }, [data, chats?.length, isLoading]);
+
+  if (!isVisible) return null;
+
   return (
-    <Popover>
+    <Popover open={isChatOpen} onOpenChange={setIsChatOpen}>
       <PopoverTrigger asChild>
         <Button
           size="icon"
