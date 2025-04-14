@@ -32,3 +32,12 @@ export const PET_HEALTH_STATUS_MAPPER: Record<PetHealthType, string> = {
   DISABLED: "Страждає",
   CRITICAL: "Критичний",
 };
+
+export const HEALTH_STATUS_COLOR_MAPPER: Record<PetHealthType, string> = {
+  HEALTHY: "bg-green-500 text-black hover:bg-green-600",
+  UNDER_TREATMENT: "bg-amber-500 hover:bg-amber-600",
+  INJURED: "bg-gray-500 text-black hover:bg-gray-600",
+  SICK: "bg-orange-500 hover:bg-orange-600",
+  DISABLED: "bg-purple-500 hover:bg-purple-600",
+  CRITICAL: "bg-red-500 hover:bg-red-600",
+};
