@@ -1,11 +1,9 @@
 import "md-editor-rt/lib/style.css";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { MdEditor } from "md-editor-rt";
 import { useState } from "react";
 
-import { createPost } from "@/api/posts/posts.api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,39 +15,35 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import useCreatePostMutation from "@/features/posts/hooks/mutations/use-create-post.mutation";
 import { toast } from "@/lib/toast";
 
 const CreatePostModal = () => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const queryClient = useQueryClient();
+  const { createPost, isPending } = useCreatePostMutation();
 
   const handleSubmit = async () => {
     try {
-      setIsLoading(true);
       if (!title || !content) {
         setError("Заповніть всі поля");
         return;
       }
 
-      await createPost({ title, content });
+      await createPost({
+        title,
+        content,
+      });
       setTitle("");
       setContent("");
       setError("");
-      setIsLoading(false);
       setOpen(false);
-
-      await queryClient.invalidateQueries({ queryKey: ["posts"] });
-
-      toast.success("Пост успішно створено");
     } catch {
       toast.error("Помилка при створенні поста");
     }
-    setIsLoading(false);
   };
 
   return (
@@ -91,7 +85,7 @@ const CreatePostModal = () => {
           <DialogClose asChild>
             <Button variant="outline">Скасувати</Button>
           </DialogClose>
-          <Button isLoading={isLoading} type="submit" onClick={handleSubmit}>
+          <Button isLoading={isPending} type="submit" onClick={handleSubmit}>
             Створити
           </Button>
         </DialogFooter>

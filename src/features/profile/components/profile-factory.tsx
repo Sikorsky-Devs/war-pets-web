@@ -5,7 +5,7 @@ import { type ReactNode } from "react";
 import ProfilePage from "@/features/profile/profile.page";
 import ShelterProfilePage from "@/features/profile/shelter-profile.page";
 import useAuthStore from "@/store/use-auth-store";
-import { type AccountType } from "@/types/user";
+import { type AccountType } from "@/types/models/user";
 
 const contents: Record<AccountType, ReactNode> = {
   GUEST: null,

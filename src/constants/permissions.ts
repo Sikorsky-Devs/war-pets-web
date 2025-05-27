@@ -1,6 +1,6 @@
-import { type PermissionsByResource } from "@/permissions/types";
+import { type PermissionsByResource } from "@/types/permissions";
 
-export const RESOURCES: PermissionsByResource = {
+export const PERMISSIONS: PermissionsByResource = {
   comments: {
     GUEST: {
       view: false,

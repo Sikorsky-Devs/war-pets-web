@@ -1,8 +1,8 @@
 import { type UserUpdateDto } from "@/api/users/users.dto";
 import { API_URL } from "@/constants/global";
 import type { ErrorResponse } from "@/types/api";
-import { type Contact } from "@/types/contacts";
-import { type ShelterUser } from "@/types/user";
+import { type Contact } from "@/types/models/contacts";
+import { type ShelterUser } from "@/types/models/user";
 import { generateAuthHeaders } from "@/utils/auth-utils";
 
 export const getUser = async (id: string) => {

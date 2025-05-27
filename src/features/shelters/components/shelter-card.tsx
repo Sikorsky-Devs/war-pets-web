@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
 import { Routes } from "@/constants/navigation";
-import type { ShelterUser } from "@/types/user";
+import type { ShelterUser } from "@/types/models/user";
 import { cn } from "@/utils/styles-utils";
 
 interface ShelterCardProps {

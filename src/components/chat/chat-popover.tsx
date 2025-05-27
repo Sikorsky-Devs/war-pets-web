@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { hasPermission } from "@/permissions";
+import { hasPermission } from "@/lib/permissions";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";
 

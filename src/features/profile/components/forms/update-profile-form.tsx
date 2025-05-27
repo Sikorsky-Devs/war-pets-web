@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Camera, X } from "lucide-react";
+import Image from "next/image";
 import type React from "react";
 import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -22,7 +23,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
 import { toast } from "@/lib/toast";
-import type { ShelterType, ShelterUser } from "@/types/user";
+import type { ShelterType, ShelterUser } from "@/types/models/user";
 import { isShelter } from "@/utils/auth-utils";
 
 const shelterTypes: ShelterType[] = ["SHELTER", "CLINIC", "KENNEL", "OTHER"];
@@ -75,7 +76,7 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
       toast.success("Профіль успішно оновлено");
       reset();
       closeModal();
-    } catch (error) {
+    } catch {
       toast.error("Не вдалося оновити профіль. Спробуйте ще раз.");
     }
   };
@@ -140,10 +141,11 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
 
             {imagePreview ? (
               <div className="relative h-32 w-32 overflow-hidden rounded-full border">
-                <img
+                <Image
                   src={imagePreview || "/placeholder.svg"}
                   alt="Перегляд профілю"
                   className="h-full w-full object-cover"
+                  fill
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
                   <Camera className="h-8 w-8 text-white" />

@@ -2,8 +2,8 @@ import { useParams } from "next/navigation";
 
 import CommentForm from "@/features/shelter/components/comment-form";
 import CommentsList from "@/features/shelter/components/comments-list";
-import useCommentsQuery from "@/features/shelter/hooks/use-comments-query";
-import { hasPermission } from "@/permissions";
+import useCommentsQuery from "@/features/shelter/hooks/queries/use-comments.query";
+import { hasPermission } from "@/lib/permissions";
 import useAuthStore from "@/store/use-auth-store";
 
 const CommentsSection = () => {

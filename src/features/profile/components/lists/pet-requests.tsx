@@ -1,8 +1,8 @@
 "use client";
 
-import PetRequest from "@/features/profile/components/cards/pet-request";
-import PetRequestSkeleton from "@/features/profile/components/cards/pet-request-skeleton";
-import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
+import PetRequestCard from "@/features/profile/components/cards/pet-request-card";
+import PetRequestCardSkeleton from "@/features/profile/components/cards/pet-request-card-skeleton";
+import usePetsQuery from "@/features/shelter/hooks/queries/use-pets.query";
 import useAuthStore from "@/store/use-auth-store";
 
 const PetRequests = () => {
@@ -18,7 +18,7 @@ const PetRequests = () => {
     return (
       <div className="space-y-6">
         {Array.from({ length: 3 }).map((_, index) => (
-          <PetRequestSkeleton key={index} />
+          <PetRequestCardSkeleton key={index} />
         ))}
       </div>
     );
@@ -35,7 +35,7 @@ const PetRequests = () => {
       ) : (
         <div className="grid gap-6">
           {filteredPets.map((pet) => (
-            <PetRequest key={pet.id} pet={pet} />
+            <PetRequestCard key={pet.id} pet={pet} />
           ))}
         </div>
       )}

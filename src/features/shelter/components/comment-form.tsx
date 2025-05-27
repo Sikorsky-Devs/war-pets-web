@@ -1,36 +1,27 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Send, Star } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
-import { addComment } from "@/api/comments/comments.api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/lib/toast";
+import useAddCommentMutation from "@/features/shelter/hooks/mutations/use-add-command.mutation";
 
 const CommentForm = () => {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [newComment, setNewComment] = useState("");
-  const queryClient = useQueryClient();
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: () =>
-      addComment({ stars: rating, content: newComment }, id as string),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["comments"] });
-      setNewComment("");
-      setRating(0);
-      toast.success("Коментар успішно додано");
-    },
-    onError: () => {
-      toast.error("Не вдалося залишити коментар");
-    },
-  });
+  const { addComment, isAddingComment } = useAddCommentMutation(
+    id as string,
+    rating,
+    newComment,
+  );
 
-  const handleCommentSubmit = async () => {
-    await mutateAsync();
+  const handleCommentSubmit = () => {
+    addComment();
+    setNewComment("");
+    setRating(0);
   };
 
   return (
@@ -68,7 +59,7 @@ const CommentForm = () => {
 
         <Button
           onClick={handleCommentSubmit}
-          isLoading={isPending}
+          isLoading={isAddingComment}
           disabled={!newComment.trim() || rating === 0}
           className="w-full sm:w-auto"
           icon={<Send />}

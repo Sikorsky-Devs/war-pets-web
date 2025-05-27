@@ -36,6 +36,6 @@ const useAdvertsQuery = () => {
   });
 
   return { pets, isLoading, error };
-}
+};
 
 export default useAdvertsQuery;

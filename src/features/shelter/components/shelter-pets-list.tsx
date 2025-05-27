@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
-import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
+import usePetsQuery from "@/features/shelter/hooks/queries/use-pets.query";
 
 const ShelterPetsList = () => {
   const { id } = useParams();

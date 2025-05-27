@@ -3,7 +3,7 @@ import {
   PET_HEALTH_STATUS_MAPPER,
   PET_TYPE_MAPPER,
 } from "@/constants/mappers";
-import { type PetHealthType, type PetType } from "@/types/pet";
+import { type PetHealthType, type PetType } from "@/types/models/pet";
 
 export const formatPetType = (type: PetType) => {
   return PET_TYPE_MAPPER[type];

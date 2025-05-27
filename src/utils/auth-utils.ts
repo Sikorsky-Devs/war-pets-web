@@ -1,6 +1,6 @@
 import { getMe } from "@/api/auth/auth.api";
 import { guestUser, hydrateAuthStore } from "@/store/use-auth-store";
-import { type AccountType } from "@/types/user";
+import { type AccountType } from "@/types/models/user";
 
 const isBrowser = typeof window !== "undefined";
 const tokenKey = "token";

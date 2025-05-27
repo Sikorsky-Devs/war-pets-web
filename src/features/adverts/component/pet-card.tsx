@@ -1,17 +1,15 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart, MapPin } from "lucide-react";
 import Image from "next/image";
 
-import { savePet, unsavePet } from "@/api/pets/pets.api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { toast } from "@/lib/toast";
-import { hasPermission } from "@/permissions";
+import useSavePetMutation from "@/features/adverts/hooks/mutations/use-save-pet.mutation";
+import { hasPermission } from "@/lib/permissions";
 import useAuthStore from "@/store/use-auth-store";
-import { type IBasePet } from "@/types/pet";
+import { type IBasePet } from "@/types/models/pet";
 import { getPetAge } from "@/utils/pet-utils";
 
 import PetDetailsModal from "./pet-details-modal";
@@ -20,37 +18,20 @@ interface PetCardProps extends IBasePet {
   isSaved?: boolean;
 }
 
-const PetCard = ({ imageLink, address, age, name, shelter, id, isSaved = false }: PetCardProps) => {
+const PetCard = ({
+  imageLink,
+  address,
+  age,
+  name,
+  shelter,
+  id,
+  isSaved = false,
+}: PetCardProps) => {
   const { user } = useAuthStore();
-  const queryClient = useQueryClient();
 
   const canSave = hasPermission(user, "save", "create");
 
-  const { mutate: handleSave, isPending: isSaving } = useMutation({
-    mutationFn: async () => {
-      try {
-        if (isSaved) {
-          await unsavePet(id);
-        } else {
-          await savePet(id);
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["pets"] }),
-        queryClient.invalidateQueries({ queryKey: ["savedPets"] }),
-      ]);
-      toast.success(
-        isSaved ? "Тварину видалено зі збережених" : "Тварину збережено",
-      );
-    },
-    onError: () => {
-      toast.error("Помилка при збереженні тварини");
-    },
-  });
+  const { handleSave, isSaving } = useSavePetMutation(id, isSaved);
 
   return (
     <Card className="flex h-full flex-col overflow-hidden">

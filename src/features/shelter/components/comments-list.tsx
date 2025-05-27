@@ -10,8 +10,8 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import UserAvatar from "@/components/user-avatar";
-import useCommentsQuery from "@/features/shelter/hooks/use-comments-query";
-import { hasPermission } from "@/permissions";
+import useCommentsQuery from "@/features/shelter/hooks/queries/use-comments.query";
+import { hasPermission } from "@/lib/permissions";
 import useAuthStore from "@/store/use-auth-store";
 import { getUserName } from "@/utils/user-utils";
 

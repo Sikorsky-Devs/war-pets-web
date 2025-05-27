@@ -1,12 +1,10 @@
-import {type AddContactDto} from "@/api/contacts/contacts.dto";
-import {API_URL} from "@/constants/global";
-import type {ErrorResponse} from "@/types/api";
-import type {Pet} from "@/types/pet";
-import {generateAuthHeaders} from "@/utils/auth-utils";
+import { type AddContactDto } from "@/api/contacts/contacts.dto";
+import { API_URL } from "@/constants/global";
+import type { ErrorResponse } from "@/types/api";
+import type { Pet } from "@/types/models/pet";
+import { generateAuthHeaders } from "@/utils/auth-utils";
 
-export const addContact = async (
-  data: AddContactDto,
-) => {
+export const addContact = async (data: AddContactDto) => {
   try {
     const response = await fetch(`${API_URL}/contacts`, {
       method: "POST",

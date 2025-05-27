@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Routes } from "@/constants/navigation";
-import usePostsQuery from "@/features/posts/hooks/use-posts-query";
+import usePostsQuery from "@/features/posts/hooks/queries/use-posts.query";
 
 const PetStories = () => {
   const { posts } = usePostsQuery(3);

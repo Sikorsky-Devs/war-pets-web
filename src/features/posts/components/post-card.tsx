@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import UserAvatar from "@/components/user-avatar";
-import { type Post } from "@/types/post";
+import { type Post } from "@/types/models/post";
 import { getUserName } from "@/utils/user-utils";
 
 interface PostCardProps {

@@ -23,7 +23,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
-import type { PetHealthType, PetType } from "@/types/pet";
+import type { PetHealthType, PetType } from "@/types/models/pet";
 import { isShelter } from "@/utils/auth-utils";
 
 type AddPetFormProps = {

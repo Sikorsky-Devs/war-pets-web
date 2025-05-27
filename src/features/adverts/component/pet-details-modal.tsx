@@ -17,8 +17,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Routes } from "@/constants/navigation";
+import { hasPermission } from "@/lib/permissions";
 import { toast } from "@/lib/toast";
-import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";
 import { getPetAge } from "@/utils/pet-utils";

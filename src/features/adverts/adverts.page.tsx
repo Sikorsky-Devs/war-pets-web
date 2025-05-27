@@ -7,19 +7,14 @@ import { PaginationControls } from "@/components/pagination/pagination-controls"
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
 import PetFilters from "@/features/adverts/component/pet-filters";
+import useAdvertsQuery from "@/features/adverts/hooks/queries/use-adverts.query";
 import { usePagination } from "@/hooks/use-pagination";
-import { type PetResponse } from "@/types/pet";
-
-import useAdvertsQuery from "./hooks/use-adverts.query";
+import { type PetResponse } from "@/types/models/pet";
 
 const ITEMS_PER_PAGE = 9;
 
 const AdvertsPage = () => {
-  const {
-    pets,
-    isLoading,
-    error,
-  } = useAdvertsQuery();
+  const { pets, isLoading, error } = useAdvertsQuery();
 
   const { data: savedPets, isLoading: isSavedPetLoading } = useQuery({
     queryKey: ["savedPets"],

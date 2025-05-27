@@ -4,7 +4,7 @@ import UserProfile from "@/components/header/user-profile";
 import { Logo } from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
 import PetSearchModal from "@/features/adverts/component/pet-seatch-modal";
-import { hasPermission } from "@/permissions";
+import { hasPermission } from "@/lib/permissions";
 import useAuthStore from "@/store/use-auth-store";
 
 import { NavMenu } from "./nav-menu";

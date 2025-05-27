@@ -6,12 +6,11 @@ import CreatePostModal from "@/features/posts/components/create-post-modal";
 import PostCard from "@/features/posts/components/post-card";
 import PostCardSkeleton from "@/features/posts/components/post-card-skeleton";
 import PostDetail from "@/features/posts/components/post-detail";
+import usePostsQuery from "@/features/posts/hooks/queries/use-posts.query";
 import { usePagination } from "@/hooks/use-pagination";
-import { hasPermission } from "@/permissions";
+import { hasPermission } from "@/lib/permissions";
 import useAuthStore from "@/store/use-auth-store";
-import { type Post } from "@/types/post";
-
-import usePostsQuery from "./hooks/use-posts-query";
+import { type Post } from "@/types/models/post";
 
 const PostsPage = () => {
   const { user } = useAuthStore();

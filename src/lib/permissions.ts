@@ -1,7 +1,6 @@
-import { RESOURCES } from "@/permissions/resources";
-import { type Permissions } from "@/permissions/types";
-import useAuthStore from "@/store/use-auth-store";
-import { type User } from "@/types/user";
+import { PERMISSIONS } from "@/constants/permissions";
+import { type User } from "@/types/models/user";
+import { type Permissions } from "@/types/permissions";
 
 export const hasPermission = <Resource extends keyof Permissions>(
   user: User,
@@ -9,7 +8,7 @@ export const hasPermission = <Resource extends keyof Permissions>(
   action: Permissions[Resource]["action"],
   data?: Permissions[Resource]["dataType"],
 ) => {
-  const rolesForResource = RESOURCES[resource];
+  const rolesForResource = PERMISSIONS[resource];
   const role = user.accountType;
 
   const permissions = rolesForResource?.[role]?.[action];

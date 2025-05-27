@@ -18,7 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useSearchRequestsQuery from "@/features/profile/hooks/use-search-requests-query";
 import { usePagination } from "@/hooks/use-pagination";
 import useChatStore from "@/store/use-chat-store";
-import { type PetSearchRequest } from "@/types/pet";
+import { type PetSearchRequest } from "@/types/models/pet";
 import { formatHealthStatus, formatPetType } from "@/utils/shelter-pets-utils";
 import { getFullName } from "@/utils/user-utils";
 

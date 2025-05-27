@@ -16,7 +16,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import PetDetailsModal from "@/features/adverts/component/pet-details-modal";
 import EditPetDialog from "@/features/profile/components/modals/edit-pet-dialog";
-import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
+import usePetsQuery from "@/features/shelter/hooks/queries/use-pets.query";
 import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
 import {

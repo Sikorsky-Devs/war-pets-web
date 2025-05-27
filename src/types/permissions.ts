@@ -1,6 +1,6 @@
-import { type Comment } from "@/types/comment";
-import { type Post } from "@/types/post";
-import { type AccountType, type User } from "@/types/user";
+import { type Comment } from "@/types/models/comment";
+import { type Post } from "@/types/models/post";
+import { type AccountType, type User } from "@/types/models/user";
 
 export type Permissions = {
   comments: {
