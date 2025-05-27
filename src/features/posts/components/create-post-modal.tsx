@@ -4,7 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { MdEditor } from "md-editor-rt";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import { createPost } from "@/api/posts/posts.api";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/lib/toast";
 
 const CreatePostModal = () => {
   const [open, setOpen] = useState(false);

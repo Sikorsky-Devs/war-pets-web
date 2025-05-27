@@ -3,27 +3,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart, MapPin } from "lucide-react";
 import Image from "next/image";
-import { toast } from "sonner";
 
 import { savePet, unsavePet } from "@/api/pets/pets.api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { toast } from "@/lib/toast";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
-import { type Pet, type PetResponse } from "@/types/pet";
+import { type IBasePet } from "@/types/pet";
 import { getPetAge } from "@/utils/pet-utils";
 
 import PetDetailsModal from "./pet-details-modal";
 
-interface PetCardProps {
-  pet: PetResponse | Pet;
+interface PetCardProps extends IBasePet {
   isSaved?: boolean;
 }
 
-const PetCard = ({ pet, isSaved = false }: PetCardProps) => {
+const PetCard = ({ imageLink, address, age, name, shelter, id, isSaved = false }: PetCardProps) => {
   const { user } = useAuthStore();
-  const { imageLink, address, age, name, shelter, id } = pet;
   const queryClient = useQueryClient();
 
   const canSave = hasPermission(user, "save", "create");

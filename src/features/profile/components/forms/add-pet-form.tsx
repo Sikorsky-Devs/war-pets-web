@@ -7,9 +7,9 @@ import { useParams } from "next/navigation";
 import type React from "react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { addPet, updatePetImage } from "@/api/pets/pets.api";
+import { type AddPetFormData, addPetSchema } from "@/api/pets/pets.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,10 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  type AddPetFormData,
-  addPetSchema,
-} from "@/features/shelter-profile/types/shelter-profile-types";
+import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
 import type { PetHealthType, PetType } from "@/types/pet";
 import { isShelter } from "@/utils/auth-utils";

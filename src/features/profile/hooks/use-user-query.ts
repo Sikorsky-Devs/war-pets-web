@@ -1,4 +1,4 @@
-import {useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { getUser, getUserContacts } from "@/api/users/users.api";
 

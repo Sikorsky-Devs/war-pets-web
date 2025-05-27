@@ -4,11 +4,10 @@ import { PlusCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AddPetDialog from "@/features/shelter-profile/components/add-pet-dialog";
-
-import PetRequests from "./components/pet-requests";
-import ShelterPets from "./components/shelter-pets";
-import UserSearchRequests from "./components/user-search-requests";
+import PetRequests from "@/features/profile/components/lists/pet-requests";
+import ShelterPets from "@/features/profile/components/lists/shelter-pets";
+import UserSearchRequests from "@/features/profile/components/lists/user-search-requests";
+import AddPetDialog from "@/features/profile/components/modals/add-pet-dialog";
 
 const ShelterProfilePage = () => {
   return (

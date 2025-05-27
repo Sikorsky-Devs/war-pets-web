@@ -34,4 +34,4 @@ const ProfileCardSkeleton = () => {
   );
 };
 
-export default ProfileCardSkeleton; 
+export default ProfileCardSkeleton;

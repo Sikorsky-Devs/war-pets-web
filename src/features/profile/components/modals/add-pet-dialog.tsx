@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useState } from "react";
+import { type PropsWithChildren, useState } from "react";
 
 import {
   Dialog,
@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import AddPetForm from "@/features/shelter-profile/components/add-pet-form";
+import AddPetForm from "@/features/profile/components/forms/add-pet-form";
 
 const AddPetDialog = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState(false);
@@ -21,9 +21,7 @@ const AddPetDialog = ({ children }: PropsWithChildren) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>Додати тварину</DialogTitle>

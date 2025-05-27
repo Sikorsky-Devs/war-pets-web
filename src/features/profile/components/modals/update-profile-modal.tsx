@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import ProfileUpdateForm from "@/features/profile/components/update-profile-form";
+import ProfileUpdateForm from "@/features/profile/components/forms/update-profile-form";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
 import useAuthStore from "@/store/use-auth-store";
 

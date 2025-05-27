@@ -1,49 +1,25 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { parseAsInteger, useQueryState } from "nuqs";
 
-import { getAllPets, getSavedPets } from "@/api/pets/pets.api";
+import { getSavedPets } from "@/api/pets/pets.api";
 import { PaginationControls } from "@/components/pagination/pagination-controls";
 import PetCard from "@/features/adverts/component/pet-card";
 import PetCardSkeleton from "@/features/adverts/component/pet-card-skeleton";
 import PetFilters from "@/features/adverts/component/pet-filters";
-import useDebounce from "@/hooks/use-debounce";
 import { usePagination } from "@/hooks/use-pagination";
 import { type PetResponse } from "@/types/pet";
+
+import useAdvertsQuery from "./hooks/use-adverts.query";
 
 const ITEMS_PER_PAGE = 9;
 
 const AdvertsPage = () => {
-  const [search] = useQueryState("search");
-  const [type] = useQueryState("type");
-  const [ageFrom] = useQueryState("ageFrom", parseAsInteger.withDefault(0));
-  const [ageTo] = useQueryState("ageTo", parseAsInteger.withDefault(20));
-  const [healthStatus] = useQueryState("healthStatus");
-
-  const debouncedSearch = useDebounce(search ?? "", 500);
-
   const {
-    data: pets = [],
+    pets,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ["pets", debouncedSearch, type, ageFrom, ageTo, healthStatus],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (debouncedSearch) params.append("search", debouncedSearch);
-      if (type) params.append("type", type);
-      if (ageFrom) params.append("ageFrom", String(ageFrom));
-      if (ageTo) params.append("ageTo", String(ageTo));
-      if (healthStatus) params.append("healthStatus", healthStatus);
-
-      const { top, common } = await getAllPets(params);
-
-      const filteredPets = [...top, ...common].filter((pet) => pet.isApproved);
-
-      return filteredPets;
-    },
-  });
+  } = useAdvertsQuery();
 
   const { data: savedPets, isLoading: isSavedPetLoading } = useQuery({
     queryKey: ["savedPets"],
@@ -89,7 +65,7 @@ const AdvertsPage = () => {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {currentPets?.map((pet: PetResponse) => {
                   const isSaved = isSavedPet(pet.id);
-                  return <PetCard key={pet.id} pet={pet} isSaved={isSaved} />;
+                  return <PetCard key={pet.id} isSaved={isSaved} {...pet} />;
                 })}
               </div>
 

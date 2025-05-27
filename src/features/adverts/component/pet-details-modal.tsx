@@ -5,7 +5,6 @@ import { Heart, Info, InfoIcon, MapPin, MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { memo, useState } from "react";
-import { toast } from "sonner";
 
 import { getPetById, savePet, unsavePet } from "@/api/pets/pets.api";
 import { getUser } from "@/api/users/users.api";
@@ -18,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Routes } from "@/constants/navigation";
+import { toast } from "@/lib/toast";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";

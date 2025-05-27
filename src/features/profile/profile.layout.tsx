@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from "react";
 
-import ProfileCard from "@/features/profile/components/profile-card";
+import ProfileCard from "@/features/profile/components/cards/profile-card";
 
 const ProfileLayout = ({ children }: PropsWithChildren) => {
   return (

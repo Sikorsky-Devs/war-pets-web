@@ -14,19 +14,23 @@ export type PetHealthType =
   | "DISABLED"
   | "CRITICAL";
 
-export interface Pet {
+export interface IBasePet {
   id: string;
-  shelterId: string;
-  volunteerId: string | null;
-  isApproved: boolean;
-  name: string | null;
-  type: PetType;
-  breed: string | null;
+  name: string;
   age: number;
   address: string | null;
   imageLink: string | null;
+  shelter: string | null;
+}
+
+export interface Pet extends IBasePet  {
+  shelterId: string;
+  volunteerId: string | null;
+  isApproved: boolean;
+  type: PetType;
+  breed: string | null;
+  address: string | null;
   description: string | null;
-  shelter?: string | null;
   heathStatus: PetHealthType;
 }
 export interface PetRequest {
@@ -39,13 +43,7 @@ export interface PetRequest {
   pet: Pet;
 }
 
-export interface PetResponse {
-  id: string;
-  name: string;
-  age: number;
-  address: string | null;
-  imageLink: string | null;
-  shelter: string | null;
+export interface PetResponse extends IBasePet {
   shelterId: string;
   isApproved: boolean;
   type: PetType;

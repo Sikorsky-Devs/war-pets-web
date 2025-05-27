@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteContactById } from "@/api/contacts/contacts.api";
-import { Contact } from "@/types/contacts";
+import { type Contact } from "@/types/contacts";
 
 export const useDeleteContact = (id: string) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient(); 
 
   return useMutation({
     mutationFn: (contactId: string) => deleteContactById(contactId),

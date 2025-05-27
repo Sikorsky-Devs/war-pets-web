@@ -1,9 +1,9 @@
-import { type CreateSearchRequestBody } from "@/api/pets/pets.dto";
-import { API_URL } from "@/constants/global";
 import {
   type AddPetFormData,
+  type CreateSearchRequestBody,
   type EditPetFormData,
-} from "@/features/shelter-profile/types/shelter-profile-types";
+} from "@/api/pets/pets.dto";
+import { API_URL } from "@/constants/global";
 import type { ErrorResponse } from "@/types/api";
 import { type Pet, type PetResponse, type PetSearchRequest } from "@/types/pet";
 import { generateAuthHeaders } from "@/utils/auth-utils";

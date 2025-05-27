@@ -1,14 +1,14 @@
 import { Heart, MapPin, MessageCircleIcon, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
 import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
+import AddPetDialog from "@/features/profile/components/modals/add-pet-dialog";
 import useShelterQuery from "@/features/shelter/hooks/use-shelter-query";
-import AddPetDialog from "@/features/shelter-profile/components/add-pet-dialog";
+import { toast } from "@/lib/toast";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";

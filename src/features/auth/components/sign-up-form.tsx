@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { signUp } from "@/api/auth/auth.api";
@@ -19,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Routes } from "@/constants/navigation";
+import { toast } from "@/lib/toast";
 import { cn } from "@/utils/styles-utils";
 
 interface SignUpFormProps {

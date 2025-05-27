@@ -5,9 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Camera, X } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Controller } from "react-hook-form";
-import { toast } from "sonner";
+import { Controller, useForm } from "react-hook-form";
 
 import { updateUser, updateUserAvatar } from "@/api/users/users.api";
 import { updateUserSchema, type UserUpdateDto } from "@/api/users/users.dto";
@@ -23,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
+import { toast } from "@/lib/toast";
 import type { ShelterType, ShelterUser } from "@/types/user";
 import { isShelter } from "@/utils/auth-utils";
 

@@ -1,8 +1,8 @@
 "use client";
 
+import PetRequest from "@/features/profile/components/cards/pet-request";
+import PetRequestSkeleton from "@/features/profile/components/cards/pet-request-skeleton";
 import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
-import PetRequest from "@/features/shelter-profile/components/pet-request";
-import PetRequestSkeleton from "@/features/shelter-profile/components/pet-request-skeleton";
 import useAuthStore from "@/store/use-auth-store";
 
 const PetRequests = () => {

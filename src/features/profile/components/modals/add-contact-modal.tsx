@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { addContact } from "@/api/contacts/contacts.api";
 import {
@@ -31,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/lib/toast";
 import { type ContactsType } from "@/types/contacts";
 import { getPlaceholder } from "@/utils/contacts-utils";
 

@@ -4,12 +4,12 @@ import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import { emailApprove, emailResend } from "@/api/auth/auth.api";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Routes } from "@/constants/navigation";
+import { toast } from "@/lib/toast";
 import { cn } from "@/utils/styles-utils";
 
 const ApproveEmailCard = () => {

@@ -1,16 +1,16 @@
 "use client";
 import { LogOutIcon, Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
-import EditContactInline from "@/features/profile/components/edit-contact-inline";
-import ProfileCardSkeleton from "@/features/profile/components/profile-card-skeleton";
-import UpdateProfileModal from "@/features/profile/components/update-profile-modal";
+import ProfileCardSkeleton from "@/features/profile/components/cards/profile-card-skeleton";
+import EditContactInline from "@/features/profile/components/forms/edit-contact-inline";
+import UpdateProfileModal from "@/features/profile/components/modals/update-profile-modal";
 import { useDeleteContact } from "@/features/profile/hooks/use-delete-contact";
 import { useEditContact } from "@/features/profile/hooks/use-edit-contact";
 import useUserQuery from "@/features/profile/hooks/use-user-query";
@@ -19,7 +19,7 @@ import { isShelter, logoutUser, removeAuthToken } from "@/utils/auth-utils";
 import { contactIconMap } from "@/utils/contacts-utils";
 import { getAccountType, getFullName } from "@/utils/user-utils";
 
-import AddContactModal from "./add-contact-modal";
+import AddContactModal from "../modals/add-contact-modal";
 
 const ProfileCard = () => {
   const { replace } = useRouter();

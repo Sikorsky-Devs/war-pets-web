@@ -2,8 +2,7 @@
 
 import { format } from "date-fns";
 import { uk } from "date-fns/locale/uk";
-import { ChevronLeft, ChevronRight, MessageCircle, Search } from "lucide-react";
-import { useQueryState } from "nuqs";
+import { MessageCircle, Search } from "lucide-react";
 
 import { getUser } from "@/api/users/users.api";
 import { PaginationControls } from "@/components/pagination/pagination-controls";
@@ -16,12 +15,12 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import useSearchRequestsQuery from "@/features/shelter-profile/hooks/use-search-requests-query";
+import useSearchRequestsQuery from "@/features/profile/hooks/use-search-requests-query";
 import { usePagination } from "@/hooks/use-pagination";
 import useChatStore from "@/store/use-chat-store";
 import { type PetSearchRequest } from "@/types/pet";
 import { formatHealthStatus, formatPetType } from "@/utils/shelter-pets-utils";
-import { getFullName, getUserName } from "@/utils/user-utils";
+import { getFullName } from "@/utils/user-utils";
 
 const ITEMS_PER_PAGE = 5;
 

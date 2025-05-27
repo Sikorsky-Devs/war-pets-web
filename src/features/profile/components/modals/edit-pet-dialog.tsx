@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { editPetById } from "@/api/pets/pets.api";
+import { type EditPetFormData, editPetSchema } from "@/api/pets/pets.dto";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,12 +26,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PET_HEALTH_STATUS_MAPPER, PET_TYPE_MAPPER } from "@/constants/mappers";
-import {
-  type EditPetFormData,
-  editPetSchema,
-} from "@/features/shelter-profile/types/shelter-profile-types";
+import { toast } from "@/lib/toast";
 import { queryClient } from "@/providers/query-provider";
-import useAuthStore from "@/store/use-auth-store";
 import type { PetHealthType, PetResponse, PetType } from "@/types/pet";
 
 interface EditPetDialogProps extends PropsWithChildren {

@@ -1,4 +1,4 @@
-import {type ShelterUser} from "@/types/user";
+import { type ShelterUser } from "@/types/user";
 
 export interface Comment {
   volunteerId: string

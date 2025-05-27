@@ -1,16 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type * as z from "zod";
 
 import { createSearchRequest } from "@/api/pets/pets.api";
 import {
-  CreateSearchRequestBody,
   type CreateSearchRequestDto,
-  createSearchRequestDto,
+  createSearchRequestDto
 } from "@/api/pets/pets.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
 import { type PetHealthType, type PetType } from "@/types/pet";
 

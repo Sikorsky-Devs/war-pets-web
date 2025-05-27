@@ -3,7 +3,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MessageCircle } from "lucide-react";
 import Image from "next/image";
-import { toast } from "sonner";
 
 import { deletePetById, editPetById } from "@/api/pets/pets.api";
 import { getUser } from "@/api/users/users.api";
@@ -16,6 +15,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import PetDetailsModal from "@/features/adverts/component/pet-details-modal";
+import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";
 import { type PetResponse } from "@/types/pet";

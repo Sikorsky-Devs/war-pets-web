@@ -1,12 +1,13 @@
-import { Button } from "@/components/ui/button";
-import UserAvatar from "@/components/user-avatar";
-import { Post } from "@/types/post";
-import { getUserName } from "@/utils/user-utils";
 import { format } from "date-fns";
 import { uk } from "date-fns/locale/uk";
 import { ChevronLeftIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/user-avatar";
+import { type Post } from "@/types/post";
+import { getUserName } from "@/utils/user-utils";
 
 const PostDetail = ({ post, onBack }: { post: Post, onBack: () => void }) => {
   const userName = getUserName(post.user.name, post.user.firstName, post.user.lastName)

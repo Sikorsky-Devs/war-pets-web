@@ -3,7 +3,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { toast } from "sonner";
 
 import { deletePetById } from "@/api/pets/pets.api";
 import { Badge } from "@/components/ui/badge";
@@ -16,17 +15,16 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import PetDetailsModal from "@/features/adverts/component/pet-details-modal";
+import EditPetDialog from "@/features/profile/components/modals/edit-pet-dialog";
 import usePetsQuery from "@/features/shelter/hooks/use-pets-query";
+import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
-import type { Pet } from "@/types/pet";
 import {
   formatHealthStatus,
   formatPetType,
   getHealthStatusColor,
 } from "@/utils/shelter-pets-utils";
 import { cn } from "@/utils/styles-utils";
-
-import EditPetDialog from "./edit-pet-dialog";
 
 const ShelterPets = () => {
   const { user } = useAuthStore();
