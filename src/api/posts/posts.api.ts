@@ -1,7 +1,7 @@
 import { type CreatePostDto } from "@/api/posts/posts.dto";
 import { API_URL } from "@/constants/global";
 import { type ErrorResponse } from "@/types/api";
-import { type Post } from "@/types/post";
+import { type Post } from "@/types/models/post";
 import { generateAuthHeaders } from "@/utils/auth-utils";
 
 export const getPosts = async () => {

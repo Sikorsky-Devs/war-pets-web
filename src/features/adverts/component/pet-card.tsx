@@ -11,7 +11,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "@/lib/toast";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
-import { type IBasePet } from "@/types/pet";
+import { type IBasePet } from "@/types/models/pet";
 import { getPetAge } from "@/utils/pet-utils";
 
 import PetDetailsModal from "./pet-details-modal";
@@ -20,7 +20,15 @@ interface PetCardProps extends IBasePet {
   isSaved?: boolean;
 }
 
-const PetCard = ({ imageLink, address, age, name, shelter, id, isSaved = false }: PetCardProps) => {
+const PetCard = ({
+  imageLink,
+  address,
+  age,
+  name,
+  shelter,
+  id,
+  isSaved = false,
+}: PetCardProps) => {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 

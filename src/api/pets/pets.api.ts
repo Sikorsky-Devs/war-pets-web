@@ -5,7 +5,11 @@ import {
 } from "@/api/pets/pets.dto";
 import { API_URL } from "@/constants/global";
 import type { ErrorResponse } from "@/types/api";
-import { type Pet, type PetResponse, type PetSearchRequest } from "@/types/pet";
+import {
+  type Pet,
+  type PetResponse,
+  type PetSearchRequest,
+} from "@/types/models/pet";
 import { generateAuthHeaders } from "@/utils/auth-utils";
 
 export const addPet = async (

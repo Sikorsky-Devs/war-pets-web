@@ -1,12 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { subHours } from "date-fns/subHours";
 import { Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { getUserChats } from "@/api/users/users.api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UserAvatar from "@/components/user-avatar";
@@ -14,7 +11,7 @@ import { ACCOUNT_TYPE_MAPPER } from "@/constants/mappers";
 import { socket } from "@/lib/socket";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";
-import { type User } from "@/types/user";
+import { type User } from "@/types/models/user";
 import { isShelter } from "@/utils/auth-utils";
 import { cn } from "@/utils/styles-utils";
 import { getUserName } from "@/utils/user-utils";

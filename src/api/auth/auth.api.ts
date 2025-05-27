@@ -6,7 +6,7 @@ import {
 } from "@/api/auth/auth.dto";
 import { API_URL } from "@/constants/global";
 import { type ErrorResponse } from "@/types/api";
-import { type User } from "@/types/user";
+import { type User } from "@/types/models/user";
 import { generateAuthHeaders } from "@/utils/auth-utils";
 
 export const signIn = async (data: SignInFormData) => {

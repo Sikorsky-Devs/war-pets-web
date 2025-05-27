@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { createSearchRequest } from "@/api/pets/pets.api";
 import {
   type CreateSearchRequestDto,
-  createSearchRequestDto
+  createSearchRequestDto,
 } from "@/api/pets/pets.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
-import { type PetHealthType, type PetType } from "@/types/pet";
+import { type PetHealthType, type PetType } from "@/types/models/pet";
 
 interface PetSearchFormProps {
   onCancel: () => void;

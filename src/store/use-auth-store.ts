@@ -1,6 +1,6 @@
 import { create } from "zustand/react";
 
-import { type User } from "@/types/user";
+import { type User } from "@/types/models/user";
 
 export const guestUser: User = {
   id: "1",

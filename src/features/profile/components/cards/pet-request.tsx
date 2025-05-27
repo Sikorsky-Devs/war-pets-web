@@ -18,7 +18,7 @@ import PetDetailsModal from "@/features/adverts/component/pet-details-modal";
 import { toast } from "@/lib/toast";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";
-import { type PetResponse } from "@/types/pet";
+import { type PetResponse } from "@/types/models/pet";
 import { getPetAge } from "@/utils/pet-utils";
 import { formatPetType } from "@/utils/shelter-pets-utils";
 

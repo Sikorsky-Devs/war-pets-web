@@ -1,5 +1,5 @@
-import { type PetHealthType, type PetType } from "@/types/pet";
-import { type AccountType, type ShelterType } from "@/types/user";
+import { type PetHealthType, type PetType } from "@/types/models/pet";
+import { type AccountType, type ShelterType } from "@/types/models/user";
 
 export const ACCOUNT_TYPE_MAPPER: Record<AccountType, string> = {
   GUEST: "Гість",

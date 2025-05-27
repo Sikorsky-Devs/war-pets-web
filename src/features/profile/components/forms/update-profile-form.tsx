@@ -22,7 +22,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { SHELTER_TYPE_MAPPER } from "@/constants/mappers";
 import { toast } from "@/lib/toast";
-import type { ShelterType, ShelterUser } from "@/types/user";
+import type { ShelterType, ShelterUser } from "@/types/models/user";
 import { isShelter } from "@/utils/auth-utils";
 
 const shelterTypes: ShelterType[] = ["SHELTER", "CLINIC", "KENNEL", "OTHER"];

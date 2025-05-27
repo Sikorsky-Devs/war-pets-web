@@ -31,7 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/lib/toast";
-import { type ContactsType } from "@/types/contacts";
+import { type ContactsType } from "@/types/models/contacts";
 import { getPlaceholder } from "@/utils/contacts-utils";
 
 const AddContactModal = () => {

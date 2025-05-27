@@ -1,7 +1,7 @@
 import { type CreateCommentDto } from "@/api/comments/comment.dto";
 import { API_URL } from "@/constants/global";
 import type { ErrorResponse } from "@/types/api";
-import { type Comment } from "@/types/comment";
+import { type Comment } from "@/types/models/comment";
 import { generateAuthHeaders } from "@/utils/auth-utils";
 
 export const addComment = async (

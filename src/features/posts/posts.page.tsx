@@ -9,7 +9,7 @@ import PostDetail from "@/features/posts/components/post-detail";
 import { usePagination } from "@/hooks/use-pagination";
 import { hasPermission } from "@/permissions";
 import useAuthStore from "@/store/use-auth-store";
-import { type Post } from "@/types/post";
+import { type Post } from "@/types/models/post";
 
 import usePostsQuery from "./hooks/use-posts-query";
 

@@ -28,7 +28,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { PET_HEALTH_STATUS_MAPPER, PET_TYPE_MAPPER } from "@/constants/mappers";
 import { toast } from "@/lib/toast";
 import { queryClient } from "@/providers/query-provider";
-import type { PetHealthType, PetResponse, PetType } from "@/types/pet";
+import type { PetHealthType, PetResponse, PetType } from "@/types/models/pet";
 
 interface EditPetDialogProps extends PropsWithChildren {
   pet: PetResponse | null;

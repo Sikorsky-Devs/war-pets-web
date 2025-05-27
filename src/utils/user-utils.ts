@@ -1,5 +1,5 @@
 import { ACCOUNT_TYPE_MAPPER } from "@/constants/mappers";
-import type { AccountType } from "@/types/user";
+import type { AccountType } from "@/types/models/user";
 
 export const getAccountType = (accountType?: AccountType) => {
   if (!accountType) return "";
