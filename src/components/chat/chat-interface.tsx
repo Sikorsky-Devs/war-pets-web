@@ -8,24 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UserAvatar from "@/components/user-avatar";
 import { ACCOUNT_TYPE_MAPPER } from "@/constants/mappers";
-import { socket } from "@/lib/socket";
+import { Chat } from "@/lib/chat";
 import useAuthStore from "@/store/use-auth-store";
 import useChatStore from "@/store/use-chat-store";
-import { type User } from "@/types/models/user";
+import { type Message } from "@/types/models/message";
 import { isShelter } from "@/utils/auth-utils";
 import { cn } from "@/utils/styles-utils";
 import { getUserName } from "@/utils/user-utils";
-
-interface Message {
-  id: string;
-  content: string;
-  createdAt: string;
-  from: "VOLUNTEER" | "SHELTER";
-  shelterId: string;
-  volunteerId: string;
-  shelter?: User;
-  volunteer?: User;
-}
 
 const ChatInterface = () => {
   const user = useAuthStore((state) => state.user);
@@ -34,6 +23,26 @@ const ChatInterface = () => {
   const [newMessage, setNewMessage] = useState("");
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+  const chat = new Chat(user.id, receiverId);
+
+  useEffect(() => {
+    if (!user?.id || !receiverId) return;
+
+    chat.onJoin((history) => {
+      setMessages(history);
+    });
+
+    chat.onMessage((message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    chat.connect();
+
+    return () => {
+      chat.disconnect();
+    };
+  }, [user?.id, receiverId]);
+
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -41,87 +50,52 @@ const ChatInterface = () => {
     }
   }, [messages]);
 
-  useEffect(() => {
-    if (!user?.id) return;
-
-    socket.emit("join", {
-      senderId: user.id,
-      receiverId,
-    });
-
-    socket.on("join", (history: Message[]) => {
-      setMessages(history);
-    });
-
-    socket.on("message", (message: Message) => {
-      setMessages((prev) => [...prev, message]);
-    });
-
-    return () => {
-      socket.off("join");
-      socket.off("message");
-      socket.emit("leave", {
-        senderId: user.id,
-        receiverId,
-      });
-    };
-  }, [user?.id, receiverId]);
-
-  const sendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!newMessage.trim() || !user?.id || !receiverId) return;
 
-    if (!newMessage.trim() || !user?.id) return;
-
-    const messageData = {
-      senderId: user.id,
-      receiverId,
-      content: newMessage,
-    };
-
-    socket.emit("message", messageData);
+    chat.sendMessage(newMessage.trim());
     setNewMessage("");
   };
 
   const isOwnMessage = (message: Message) => {
     if (!user?.id) return false;
-
-    if (message.from === "VOLUNTEER") {
-      return message.volunteerId === user.id;
-    } else {
-      return message.shelterId === user.id;
-    }
+    return message.from === "VOLUNTEER"
+      ? message.volunteerId === user.id
+      : message.shelterId === user.id;
   };
 
   const getSenderName = (message: Message) => {
     if (isOwnMessage(message)) return "";
 
-    if (message.from === "VOLUNTEER") {
-      return getUserName(
-        message.volunteer?.name,
-        message.volunteer?.firstName,
-        message.volunteer?.lastName,
-      );
-    } else {
-      return getUserName(
-        message.shelter?.name,
-        message.shelter?.firstName,
-        message.shelter?.lastName,
-      );
-    }
+    const name =
+      message.from === "VOLUNTEER"
+        ? message.volunteer?.name
+        : message.shelter?.name;
+
+    const firstName =
+      message.from === "VOLUNTEER"
+        ? message.volunteer?.firstName
+        : message.shelter?.firstName;
+
+    const lastName =
+      message.from === "VOLUNTEER"
+        ? message.volunteer?.lastName
+        : message.shelter?.lastName;
+
+    return getUserName(name, firstName, lastName);
   };
 
   const getSenderAvatar = (message: Message) => {
     if (isOwnMessage(message)) return user?.avatarLink;
-
-    if (message.from === "VOLUNTEER") {
-      return message.volunteer?.avatarLink;
-    } else {
-      return message.shelter?.avatarLink;
-    }
+    return message.from === "VOLUNTEER"
+      ? message.volunteer?.avatarLink
+      : message.shelter?.avatarLink;
   };
 
   return (
     <div className="flex w-full flex-col shadow-lg">
+      {/* Header */}
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-3">
           <UserAvatar
@@ -140,50 +114,48 @@ const ChatInterface = () => {
         </div>
       </div>
 
+      {/* Chat Selector */}
       {chats && (
         <div className="overflow-x-auto border-b px-4 py-2">
           <div className="flex w-max gap-2">
-            {chats?.map((chat) => {
-              return (
-                <Button
-                  key={chat?.id}
-                  variant={chat.id === receiverId ? "secondary" : "ghost"}
-                  size="sm"
-                  className="flex items-center gap-2 py-1"
-                  onClick={() => {
-                    useChatStore.setState({ receiverId: chat?.id });
-                  }}
-                >
-                  <UserAvatar
-                    image={chat?.avatarLink}
-                    isShelter={isShelter(chat?.accountType)}
-                    className="h-6 w-6 flex-shrink-0"
-                  />
-                  <div className="text-left">
-                    <div className="max-w-[100px] truncate text-xs font-medium">
-                      {getUserName(chat?.name, chat?.firstName, chat?.lastName)}
-                    </div>
-                    <div className="text-[10px] text-muted-foreground">
-                      {ACCOUNT_TYPE_MAPPER[chat?.accountType]}
-                    </div>
+            {chats.map((chat) => (
+              <Button
+                key={chat.id}
+                variant={chat.id === receiverId ? "secondary" : "ghost"}
+                size="sm"
+                className="flex items-center gap-2 py-1"
+                onClick={() => useChatStore.setState({ receiverId: chat.id })}
+              >
+                <UserAvatar
+                  image={chat.avatarLink}
+                  isShelter={isShelter(chat.accountType)}
+                  className="h-6 w-6 flex-shrink-0"
+                />
+                <div className="text-left">
+                  <div className="max-w-[100px] truncate text-xs font-medium">
+                    {getUserName(chat.name, chat.firstName, chat.lastName)}
                   </div>
-                </Button>
-              );
-            })}
+                  <div className="text-[10px] text-muted-foreground">
+                    {ACCOUNT_TYPE_MAPPER[chat.accountType]}
+                  </div>
+                </div>
+              </Button>
+            ))}
           </div>
         </div>
       )}
 
+      {/* Message List */}
       {messages.length ? (
         <div
           ref={messagesContainerRef}
           className="no-scrollbar h-[300px] space-y-4 overflow-y-auto p-4"
         >
-          {messages.map((message, index) => {
+          {messages.map((message) => {
             const isOwn = isOwnMessage(message);
             return (
               <div
-                key={message.id || index}
+                key={message.id}
                 className={cn(
                   "mb-4 flex",
                   isOwn ? "justify-end" : "justify-start",
@@ -195,7 +167,6 @@ const ChatInterface = () => {
                     className="mr-2 h-8 w-8 flex-shrink-0"
                   />
                 )}
-
                 <div
                   className={cn("max-w-[70%]", isOwn ? "order-1" : "order-2")}
                 >
@@ -212,7 +183,6 @@ const ChatInterface = () => {
                       {format(new Date(message.createdAt), "HH:mm")}
                     </span>
                   </div>
-
                   <div
                     className={cn(
                       "w-fit break-words rounded-2xl px-3 py-2 text-sm",
@@ -224,7 +194,6 @@ const ChatInterface = () => {
                     {message.content}
                   </div>
                 </div>
-
                 {isOwn && (
                   <UserAvatar
                     image={user?.avatarLink}
@@ -241,8 +210,12 @@ const ChatInterface = () => {
         </div>
       )}
 
+      {/* Input */}
       <div className="mt-auto w-full border-t p-4">
-        <form onSubmit={sendMessage} className="flex w-full items-center gap-2">
+        <form
+          onSubmit={handleSendMessage}
+          className="flex w-full items-center gap-2"
+        >
           <Input
             placeholder="Введіть повідомлення..."
             value={newMessage}

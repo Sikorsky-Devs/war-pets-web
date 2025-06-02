@@ -1,10 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 import { buttonVariants } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
 import { Routes } from "@/constants/navigation";
 import useSheltersQuery from "@/features/shelters/hooks/use-shelters-query";
-import Link from "next/link";
 
 const sheltersCount = 8;
 
@@ -28,14 +29,26 @@ const Shelters = () => {
         <div className="mx-auto mt-16 grid max-w-5xl grid-cols-2 gap-8 md:grid-cols-4">
           {shelters.map((shelter, i) => (
             <div key={i} className="flex flex-col items-center space-y-2">
-              <UserAvatar className="size-24" size={24} image={shelter.avatarLink} isShelter />
-              <h3 className="text-lg font-medium">{shelter.name}</h3>
+              <UserAvatar
+                className="size-24"
+                size={24}
+                image={shelter.avatarLink}
+                isShelter
+              />
+              <h3 className="text-md w-2/3 text-center font-medium">
+                {shelter.name}
+              </h3>
             </div>
           ))}
         </div>
 
         <div className="mt-8 flex justify-center">
-          <Link href={Routes.Shelters} className={buttonVariants({ variant: "outline" })}>Переглянути всі притулки</Link>
+          <Link
+            href={Routes.Shelters}
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Переглянути всі притулки
+          </Link>
         </div>
       </div>
     </section>

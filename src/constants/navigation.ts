@@ -10,6 +10,16 @@ export enum Routes {
   Posts = "/posts",
 }
 
+export const PUBLIC_ROUTES = [
+  Routes.Home,
+  Routes.Adverts,
+  Routes.Shelters,
+  Routes.Shelter,
+  Routes.Posts,
+];
+export const PROTECTED_ROUTES = [Routes.Profile];
+export const AUTH_ROUTES = [Routes.SignUp, Routes.SignIn, Routes.AuthSuccess];
+
 export const navigation = [
   { href: Routes.Posts, label: "Pet Stories" },
   { href: Routes.Adverts, label: "Оголошення" },

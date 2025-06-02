@@ -1,4 +1,5 @@
 import { getMe } from "@/api/auth/auth.api";
+import { AUTH_ROUTES, PROTECTED_ROUTES, Routes } from "@/constants/navigation";
 import { guestUser, hydrateAuthStore } from "@/store/use-auth-store";
 import { type AccountType } from "@/types/models/user";
 
@@ -46,4 +47,14 @@ export const isGuest = (accountType: AccountType) => {
 
 export const isShelter = (accountType: AccountType) => {
   return accountType === "SHELTER";
+};
+
+export const getRedirectPath = (pathname: Routes, userRole: AccountType) => {
+  if (AUTH_ROUTES.includes(pathname) && !isGuest(userRole)) {
+    return Routes.Home;
+  }
+
+  if (PROTECTED_ROUTES.includes(pathname) && isGuest(userRole)) {
+    return Routes.SignIn;
+  }
 };
