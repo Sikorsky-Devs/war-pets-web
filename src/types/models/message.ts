@@ -1,4 +1,4 @@
-import { type User } from "@/types/user";
+import { type User } from "@/types/models/user";
 
 export interface Message {
   id: string;
