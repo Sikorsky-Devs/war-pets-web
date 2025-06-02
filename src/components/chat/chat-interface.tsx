@@ -44,9 +44,9 @@ const ChatInterface = () => {
   }, [user?.id, receiverId]);
 
   useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
+    const messagesContainer = messagesContainerRef.current;
+    if (messagesContainer) {
+      messagesContainerRef.current.scrollTop = messagesContainer.scrollHeight;
     }
   }, [messages]);
 

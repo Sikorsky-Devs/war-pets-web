@@ -31,7 +31,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     const redirectPath = getRedirectPath(pathname, user.accountType);
-    console.log(user);
     if (redirectPath) {
       replace(redirectPath);
     }

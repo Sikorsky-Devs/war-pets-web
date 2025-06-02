@@ -202,5 +202,35 @@ A simplified look at the project layout:
 
 - [OCP](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/components/ui/button.tsx) - The component is open for adding styles without changing its internal logic. [Example](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/features/posts/components/create-post-modal.tsx)
 
-- ISP - Interface Segregation Principle
-- DIP - Dependency Inversion Principle
+- [LSP](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/components/ui/button.tsx) - We can change default button with UI kit button and it will work the same.
+
+- [ISP](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/store/use-chat-store.ts)- The store is responsible for managing chat state, so states and actions were divided into different interfaces.
+
+- [DIP](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/api/posts/posts.api.ts) - The API module is responsible for making requests to the backend, so UI components do not depend on the implementation details of the API.
+
+### GRASP
+
+1. [Information Expert](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/features/adverts/component/pet-card.tsx) - Pet card accept only needed props.
+
+2. [Creator](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/features/profile/components/lists/pet-requests.tsx) - Pet requests list creates request cards.
+
+3. [Controller](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/features/shelter/shelter.page.tsx) - User can control the flow of the application.
+
+4. High Coupling and Low Cohesion - The project uses `Feature-based module architecture` to achieve high coupling beetween domain entities and low cohesion.
+5. [Indirection](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/lib/toast.ts) - The project uses `Dependency Injection` in `lib/toast.ts` to achieve indirection.
+
+### GoF
+
+1. [Factory Method](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/features/profile/components/profile-factory.tsx) - The profile factory creates different profile components based on the user role.
+
+2. [Decorator](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/providers/animation-provider.tsx) - The animation provider decorates the components with animations.
+
+3. [Observer](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/components/chat/chat-popover.tsx) - The chat popover component observes the chat store and updates its state accordingly.
+
+4. [Proxy](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/providers/auth-provider.tsx) - The auth provider proxy wrap all the components and redirects the user to the login page if they are not authenticated.
+
+5. [State](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/features/profile/components/lists/pet-requests.tsx) - The pet requests list component uses the state pattern to render different content based on the state.
+
+### Other
+
+6. [Facade](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/lib/chat.ts) - The chat facade is a wrapper around the chat API.
