@@ -2,17 +2,20 @@ import { create } from "zustand/react";
 
 import { type User } from "@/types/models/user";
 
-interface ChatStore {
+interface ChatState {
   isChatOpen: boolean;
-  setIsChatOpen: (isChatOpen: boolean) => void;
   chats: User[];
+  receiverId: string | null;
+}
+
+interface ChatActions {
+  setIsChatOpen: (isChatOpen: boolean) => void;
   setChats: (chats: User[]) => void;
   addChat: (chat: User) => void;
-  receiverId: string | null;
   setReceiverId: (receiverId: string) => void;
 }
 
-const useChatStore = create<ChatStore>((set) => ({
+const useChatStore = create<ChatState & ChatActions>((set) => ({
   isChatOpen: false,
   setIsChatOpen: (isChatOpen) => set({ isChatOpen }),
   chats: [],

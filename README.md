@@ -8,9 +8,9 @@
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Environment Variables](#environment-variables)
-    - [Running the App](#running-the-app)
+  - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
+  - [Running the App](#running-the-app)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Contributing](#contributing)
@@ -90,6 +90,7 @@ pnpm start
 ## Project Structure
 
 A simplified look at the project layout:
+
 ```
 ├── public/
 │   ├── favicon.ico
@@ -156,65 +157,50 @@ A simplified look at the project layout:
 
 - **src/**  
   The main source directory, organized as follows:
-    - **api/**  
-      Modules responsible for backend communication. These include:
-        - **auth/** — Handles authentication-related API functions.
-        - **comments/** — Manages functionalities related to comments.
-        - **contacts/** — Responsible for contact data and inquiries.
-        - **pets/** — Manages pet-related API functions.
-        - **posts/** — Handles operations related to posts.
-        - **users/** — Manages user-related API functions.
-    - **app/**  
-      Contains files related to pages and routing:
-        - **(main)/** — The main section of the application, including:
-            - **profile/** — Contains pages for both user profiles and shelter profiles.
-            - **adverts/**, **posts/**, and **shelters/** — Sections for adverts, posts, and shelters respectively.
-        - **auth/** — Dedicated to authentication flows, such as registration, signing in, email approval, and success notifications.
-    - **components/**  
-      A library of reusable UI components (e.g., buttons, cards, modals, and layout elements).
-    - **constants/**  
-      Files containing constant values and enumerations used throughout the application.
-    - **features/**  
-      Modules encapsulating specific functional features (e.g., adverts, auth, home, posts, profile, shelter, shelter-profile, shelters).
-    - **hooks/**  
-      Custom React hooks that encapsulate reusable logic.
-    - **lib/**  
-      Helper libraries and utilities for API requests, data transformations, and other common tasks.
-    - **permissions/**  
-      Utilities for managing user permissions and access control.
-    - **providers/**  
-      React context providers for global state management and theming.
-    - **store/**  
-      State management files (for example, using Zustand).
-    - **styles/**  
-      Global styling and CSS files.
-    - **types/**  
-      Shared TypeScript interfaces and type definitions used across the application.
-    - **utils/**  
-      General utility functions and helper modules.
+  - **api/**  
+    Modules responsible for backend communication. These include:
+    - **auth/** — Handles authentication-related API functions.
+    - **comments/** — Manages functionalities related to comments.
+    - **contacts/** — Responsible for contact data and inquiries.
+    - **pets/** — Manages pet-related API functions.
+    - **posts/** — Handles operations related to posts.
+    - **users/** — Manages user-related API functions.
+  - **app/**  
+    Contains files related to pages and routing:
+    - **(main)/** — The main section of the application, including:
+      - **profile/** — Contains pages for both user profiles and shelter profiles.
+      - **adverts/**, **posts/**, and **shelters/** — Sections for adverts, posts, and shelters respectively.
+    - **auth/** — Dedicated to authentication flows, such as registration, signing in, email approval, and success notifications.
+  - **components/**  
+    A library of reusable UI components (e.g., buttons, cards, modals, and layout elements).
+  - **constants/**  
+    Files containing constant values and enumerations used throughout the application.
+  - **features/**  
+    Modules encapsulating specific functional features (e.g., adverts, auth, home, posts, profile, shelter, shelter-profile, shelters).
+  - **hooks/**  
+    Custom React hooks that encapsulate reusable logic.
+  - **lib/**  
+    Helper libraries and utilities for API requests, data transformations, and other common tasks.
+  - **permissions/**  
+    Utilities for managing user permissions and access control.
+  - **providers/**  
+    React context providers for global state management and theming.
+  - **store/**  
+    State management files (for example, using Zustand).
+  - **styles/**  
+    Global styling and CSS files.
+  - **types/**  
+    Shared TypeScript interfaces and type definitions used across the application.
+  - **utils/**  
+    General utility functions and helper modules.
 
-## Contributing
+## Patterns
 
-You are welcome to contribute in any of the following ways:
+### SOLID
 
-1. Report or fix bugs.
-2. Implement new features (e.g., filters, pet categories, maps).
-3. Improve UI/UX or accessibility.
-4. Refactor or improve code readability.
+- [SRP](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/components/user-avatar.tsx) - The component is responsible for rendering a user avatar.
 
-### How to Contribute
+- [OCP](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/components/ui/button.tsx) - The component is open for adding styles without changing its internal logic. [Example](https://github.com/Sikorsky-Devs/war-pets-web/blob/main/src/features/posts/components/create-post-modal.tsx)
 
-1. **Fork** this repository.
-2. **Create** a branch:
-   ```bash
-   git checkout -b my-feature
-   ```
-3. **Commit** your changes:
-   ```bash
-   git commit -m "Add feature"
-   ```
-4. **Push** to your fork:
-   ```bash
-   git push origin my-feature
-   ```
-5. Open a **Pull Request** to the main repository.
+- ISP - Interface Segregation Principle
+- DIP - Dependency Inversion Principle
